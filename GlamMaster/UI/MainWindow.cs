@@ -134,8 +134,6 @@ namespace GlamMaster.UI
                 }
             }
 
-            ImGui.Text("The client is " + (SocketManager.GetClient == null ? "null" : "not null"));
-
             bool AutoConnectToSocketServer = Service.Configuration.AutomaticallyConnectToSocketServer;
 
             if (ImGui.Checkbox("Connect to the server on startup", ref AutoConnectToSocketServer))
