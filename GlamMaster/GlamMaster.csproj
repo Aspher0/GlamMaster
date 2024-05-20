@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="Dalamud.Plugin.Bootstrap.targets" />
+
+  <PropertyGroup>
+    <Version>0.0.0.1</Version>
+    <Description>Let others control your fashion.</Description>
+    <PackageProjectUrl>https://github.com/goatcorp/SamplePlugin</PackageProjectUrl>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SocketIOClient" Version="3.1.1" />
+    <PackageReference Include="SocketIOClient.Newtonsoft.Json" Version="3.0.7" />
+  </ItemGroup>
+</Project>
