@@ -1,6 +1,4 @@
-using GlamMaster.Socket;
 using GlamMaster.Socket.SocketOnEvents;
-using System;
 using System.Collections.Generic;
 
 namespace GlamMaster.Structs

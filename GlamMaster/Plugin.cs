@@ -9,6 +9,7 @@ using GlamMaster.Services;
 using System.Collections.Generic;
 using System;
 using GlamMaster.Socket;
+using GlamMaster.Events;
 
 namespace GlamMaster;
 
@@ -33,7 +34,7 @@ public sealed class Plugin : IDalamudPlugin
 
         SetupUI();
         SetupCommands();
-        SetupSocketConnection();
+        EventsManager.RegisterAllEvents();
     }
     private void SetupUI()
     {
@@ -49,14 +50,6 @@ public sealed class Plugin : IDalamudPlugin
             {
                 HelpMessage = CommandName.Item2
             });
-        }
-    }
-
-    private void SetupSocketConnection()
-    {
-        if (Service.Configuration.AutomaticallyConnectToSocketServer)
-        {
-            SocketManager.InitializeSocket();
         }
     }
 
@@ -76,6 +69,7 @@ public sealed class Plugin : IDalamudPlugin
 
         MainWindow.Dispose();
         await SocketManager.DisposeSocket(SocketManager.GetClient, true);
+        EventsManager.UnregisterAllEvents();
 
         foreach (var CommandName in commandNames)
         {

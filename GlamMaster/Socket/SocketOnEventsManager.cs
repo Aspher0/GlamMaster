@@ -98,7 +98,7 @@ namespace GlamMaster.Socket
                     if (isConnectEvent)
                         GlamLogger.Information("Attempting to connect to the server but the client does not correspond to the last connected client. Disposing this client now.");
 
-                    _ = SocketManager.DisposeSocket(client, false, true);
+                    _ = SocketManager.DisposeSocket(client, false);
                     return;
                 }
 
@@ -107,7 +107,7 @@ namespace GlamMaster.Socket
                     if (isConnectEvent)
                         GlamLogger.Information("GlamMaster already has an active server connection. Disposing this client now.");
 
-                    _ = SocketManager.DisposeSocket(client, false, true);
+                    _ = SocketManager.DisposeSocket(client, false);
                     return;
                 }
             }

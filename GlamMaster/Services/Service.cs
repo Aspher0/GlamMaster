@@ -1,3 +1,5 @@
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -36,5 +38,20 @@ namespace GlamMaster.Services
 
         [PluginService]
         public static IPluginLog Logger { get; private set; } = null!;
+
+        [PluginService]
+        public static IClientState ClientState { get; private set; } = null!;
+
+        [PluginService]
+        public static ISigScanner SigScanner { get; private set; } = null!;
+
+        [PluginService]
+        public static ITargetManager TargetManager { get; private set; } = null!;
+
+        [PluginService]
+        public static IDataManager DataManager { get; private set; } = null!;
+
+        [PluginService]
+        public static IFramework Framework { get; private set; } = null!;
     }
 }

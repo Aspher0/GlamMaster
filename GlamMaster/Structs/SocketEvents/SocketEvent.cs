@@ -1,7 +1,7 @@
 using SocketIOClient;
 using System;
 
-namespace GlamMaster.Socket
+namespace GlamMaster.Structs
 {
     public class SocketEvent
     {

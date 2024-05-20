@@ -24,6 +24,12 @@ namespace GlamMaster.Socket
 
         public static async Task InitializeSocket()
         {
+            if (!Service.ClientState.IsLoggedIn)
+            {
+                GlamLogger.Error("Cannot connect to the server, you are not logged in.");
+                return;
+            }
+
             if (SocketConnected || Connecting)
             {
                 if (SocketConnected)

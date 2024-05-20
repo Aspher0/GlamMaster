@@ -72,12 +72,19 @@ namespace GlamMaster.UI
         {
             ImGui.BeginChild("Main_UI##GlamMasterMainTab01");
 
-            if (ImGui.Button("Send socket to server"))
+            if (!SocketManager.IsSocketConnected)
             {
-                await SocketManager.GetClient.SendPing();
+                ImGui.TextWrapped("Not connected to the server. Please, connect to the server by going to the settings and clicking the connect to server button.");
+            } else
+            {
+                if (ImGui.Button("Send a ping to the server"))
+                {
+                    await SocketManager.GetClient.SendPing();
+                }
+
+                ImGui.Spacing();
             }
 
-            ImGui.Spacing();
 
             ImGui.EndChild();
         }
@@ -129,18 +136,31 @@ namespace GlamMaster.UI
                 {
                     if (ImGui.Button("Connect to the Server"))
                     {
-                        _ = SocketManager.InitializeSocket();
+                        if (Service.ClientState.IsLoggedIn)
+                            _ = SocketManager.InitializeSocket();
+                    }
+
+                    if (!Service.ClientState.IsLoggedIn)
+                    {
+                        if (ImGui.IsItemHovered())
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.Text("Please connect to a character to connect to the server.");
+                            ImGui.EndTooltip();
+                        }
                     }
                 }
             }
 
             bool AutoConnectToSocketServer = Service.Configuration.AutomaticallyConnectToSocketServer;
 
-            if (ImGui.Checkbox("Connect to the server on startup", ref AutoConnectToSocketServer))
+            if (ImGui.Checkbox("Connect to the server on login", ref AutoConnectToSocketServer))
             {
                 Service.Configuration.AutomaticallyConnectToSocketServer = AutoConnectToSocketServer;
                 Service.Configuration.Save();
             }
+
+            ImGui.Spacing();
 
             ImGui.EndChild();
         }
