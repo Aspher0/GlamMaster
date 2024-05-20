@@ -75,7 +75,7 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.RemoveAllWindows();
 
         MainWindow.Dispose();
-        await SocketManager.DisposeSocket(SocketManager.GetClient);
+        await SocketManager.DisposeSocket(SocketManager.GetClient, true);
 
         foreach (var CommandName in commandNames)
         {

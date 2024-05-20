@@ -114,7 +114,7 @@ namespace GlamMaster.UI
             {
                 if (ImGui.Button("Abort Connection"))
                 {
-                    _ = SocketManager.DisposeSocket(SocketManager.GetClient);
+                    SocketManager.AbortSocketConnection(SocketManager.GetClient);
                 }
             } else
             {
@@ -133,6 +133,8 @@ namespace GlamMaster.UI
                     }
                 }
             }
+
+            ImGui.Text("The client is " + (SocketManager.GetClient == null ? "null" : "not null"));
 
             bool AutoConnectToSocketServer = Service.Configuration.AutomaticallyConnectToSocketServer;
 
@@ -154,10 +156,9 @@ namespace GlamMaster.UI
 
                 bool wasConnected = SocketManager.IsSocketConnected;
 
-                await SocketManager.DisposeSocket(SocketManager.GetClient, true);
-
                 if (wasConnected)
                 {
+                    await SocketManager.DisconnectSocket(SocketManager.GetClient, true);
                     _ = SocketManager.InitializeSocket();
                 }
             }

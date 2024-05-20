@@ -16,7 +16,7 @@ namespace GlamMaster.Socket.SocketOnEvents
             }
             catch (Exception ex)
             {
-                GlamLogger.Print("Could not parse response from the serverPong socket Event: " + ex.Message);
+                GlamLogger.Error("Could not parse response from the serverPong socket Event: " + ex.Message);
             }
         }
     }

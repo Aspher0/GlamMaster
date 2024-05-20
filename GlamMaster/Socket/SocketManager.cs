@@ -1,3 +1,4 @@
+using Dalamud.Game.Text;
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using SocketIOClient;
@@ -26,11 +27,26 @@ namespace GlamMaster.Socket
             if (SocketConnected || Connecting)
             {
                 if (SocketConnected)
+                {
+                    GlamLogger.Information("Client already connected.");
                     GlamLogger.Print("You are already connected to the server.");
+                }
 
                 if (Connecting)
+                {
+                    GlamLogger.Information("Client already trying to connect to the server.");
                     GlamLogger.Print("The socket is already trying to connect.");
+                }
 
+                return;
+            }
+
+            string serverURL = Service.Configuration.SocketServerURL;
+
+            if (string.IsNullOrEmpty(serverURL))
+            {
+                GlamLogger.Information("No Server URL specified.");
+                GlamLogger.PrintError("You have not selected a server in the configuration. Please go to the settings and input a Server URL.");
                 return;
             }
 
@@ -39,14 +55,6 @@ namespace GlamMaster.Socket
             try
             {
                 await ConnectionSemaphore.WaitAsync();
-
-                string serverURL = Service.Configuration.SocketServerURL;
-
-                if (string.IsNullOrEmpty(serverURL))
-                {
-                    GlamLogger.Print("You have not selected a server in the configuration. Please go to the settings and input a Server URL.");
-                    return;
-                }
 
                 var options = new SocketIOOptions
                 {
@@ -61,7 +69,7 @@ namespace GlamMaster.Socket
 
                 SocketOnEventsManager.RegisterAllEvents(Client);
 
-                GlamLogger.Print("Attempting to connect to the server " + serverURL);
+                GlamLogger.Information("Attempting to connect to the server " + serverURL);
 
                 try
                 {
@@ -69,7 +77,8 @@ namespace GlamMaster.Socket
                 }
                 catch (Exception ex)
                 {
-                    GlamLogger.Print("Failed to connect to the server: " + ex.Message);
+                    GlamLogger.Error("Failed to connect to the server: " + ex.Message);
+                    GlamLogger.PrintError("Failed to connect to the server.");
                 }
                 finally
                 {
@@ -82,13 +91,20 @@ namespace GlamMaster.Socket
             }
         }
 
-        public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool printMessages = false)
+        public static void AbortSocketConnection(SocketIOClient.SocketIO? client)
         {
-            Client = null;
-            SocketConnected = false;
+            GlamLogger.Information("Aborting the connection to the server.");
 
-            if (printMessages)
-                GlamLogger.Print("Aborting the connection");
+            _ = DisposeSocket(client, true, true);
+        }
+
+        public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool resetVariables, bool printMessages = false)
+        {
+            if (resetVariables)
+            {
+                Client = null;
+                SocketConnected = false;
+            }
 
             if (client != null)
             {
@@ -99,11 +115,6 @@ namespace GlamMaster.Socket
                     await client.DisconnectAsync();
                 }
             }
-            else
-            {
-                if (printMessages)
-                    GlamLogger.Print("The socket you are trying to dispose is null");
-            }
 
             client?.Dispose();
             client = null;
@@ -111,27 +122,23 @@ namespace GlamMaster.Socket
 
         public static async Task DisconnectSocket(SocketIOClient.SocketIO? client, bool printMessages = false)
         {
-            if (client != null)
-                SocketOnEventsManager.UnregisterAllEvents(client);
-
             if (client == null || !client.Connected)
             {
                 if (printMessages)
+                {
+                    GlamLogger.Information("Attempting to disconnect a client that isn't connected.");
                     GlamLogger.Print("The socket is not connected to the server.");
-
-                if (client == null)
-                    GlamLogger.Print("The socket is null !");
+                }
             }
-            else if (client != null && client.Connected)
+            else if (client != null)
             {
-                if (printMessages)
-                    GlamLogger.Print("Disconnecting from the server.");
+                SocketOnEventsManager.UnregisterAllEvents(client);
 
-                GlamLogger.Print("Global client id: " + Client?.Id ?? "null");
-                GlamLogger.Print("client id: " + client.Id);
-
-                await client.DisconnectAsync();
-                SocketConnected = false;
+                if (client.Connected)
+                {
+                    await client.DisconnectAsync();
+                    SocketConnected = false;
+                }
             }
 
             client?.Dispose();
@@ -145,7 +152,10 @@ namespace GlamMaster.Socket
             if (client == null || !client.Connected)
             {
                 if (printMessage)
-                    GlamLogger.Print("Not connected to the server. Please, connect to the server by going to the settings and clicking the connect to server button.");
+                {
+                    GlamLogger.Information("Trying to send a message to the server but the client is not connected to the server.");
+                    GlamLogger.PrintError("Not connected to the server. Please, connect to the server by going to the settings and clicking the connect to server button.");
+                }
 
                 return false;
             }

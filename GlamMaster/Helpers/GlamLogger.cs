@@ -47,5 +47,14 @@ namespace GlamMaster.Helpers
 
             Service.ChatGui.Print(chatEntry);
         }
+
+        public static void PrintError(string message, bool printPluginName = true)
+        {
+            XivChatEntry chat = new XivChatEntry();
+            chat.Type = XivChatType.ErrorMessage;
+            chat.Message = printPluginName ? "[GLAMOURMASTER] - " + message : message;
+
+            Service.ChatGui.Print(chat);
+        }
     }
 }

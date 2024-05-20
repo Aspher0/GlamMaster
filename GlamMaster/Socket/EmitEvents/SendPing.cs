@@ -23,7 +23,7 @@ namespace GlamMaster.Socket.EmitEvents
             }
             catch (Exception ex)
             {
-                GlamLogger.Print("Failed to send a ping: " + ex.Message);
+                GlamLogger.Error("Failed to send a ping: " + ex.Message);
             }
         }
     }
