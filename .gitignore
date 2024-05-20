@@ -396,3 +396,12 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# personal
+.git
+.vs
+*.user
+GlamMaster/obj
+GlamMaster/bin/*
+debug.log
+.editorconfig
