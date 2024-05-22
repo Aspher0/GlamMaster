@@ -55,9 +55,9 @@ namespace GlamMaster.Socket
 
             string serverURL = socketServer.serverURL;
 
-            if (string.IsNullOrEmpty(serverURL))
+            if (!GlobalHelper.IsValidServerUrl(serverURL))
             {
-                GlamLogger.Information("No Server URL specified.");
+                GlamLogger.Information("Invalid Server URL.");
                 GlamLogger.PrintError("The server you have selected does not have a valid URL.");
                 return;
             }
@@ -95,13 +95,10 @@ namespace GlamMaster.Socket
                     GlamLogger.PrintError("Failed to connect to the server.");
                     _ = DisposeSocket(Client, true, true);
                 }
-                finally
-                {
-                    Connecting = false;
-                }
             }
             finally
             {
+                Connecting = false;
                 ConnectionSemaphore.Release();
             }
         }

@@ -62,7 +62,7 @@ namespace GlamMaster.UI
 
             if (!SocketManager.IsSocketConnected)
             {
-                ImGui.TextWrapped("Not connected to the server. Please, connect to the server by going to the settings and clicking the connect to server button.");
+                ImGui.TextWrapped("Please, connect to a server by going in the settings tab.");
             } else
             {
                 if (ImGui.Button("Send a ping to the server"))

@@ -1,13 +1,13 @@
-using GlamMaster.Services;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace GlamMaster.Helpers
 {
-    public class GlobalHelper
+    internal class GlobalHelper
     {
         private static readonly char[] AllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_".ToCharArray();
+        private static readonly Regex UrlRegex = new Regex(@"^(http|https|ws|wss)://([\w\-\.]+)(:\d+)?(/.*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static string GenerateRandomString(int length = 50)
         {
@@ -38,6 +38,27 @@ namespace GlamMaster.Helpers
                 GlamLogger.Error("Invalid RegEXP: " + regexp);
                 return false;
             }
+        }
+
+        public static bool IsValidServerUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return false;
+
+            Match match = UrlRegex.Match(url);
+
+            if (!match.Success)
+                return false;
+
+            if (match.Groups[3].Success)
+            {
+                string portStr = match.Groups[3].Value.Substring(1);
+
+                if (!int.TryParse(portStr, out int port) || port < 1 || port > 65535)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

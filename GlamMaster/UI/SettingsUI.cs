@@ -46,7 +46,7 @@ namespace GlamMaster.UI
                     bool flag_url_match = GlobalHelper.RegExpMatch(SocketServer.serverURL, CurrentServerSelectorSearch);
                     bool flag_id_match = GlobalHelper.RegExpMatch(SocketServer.unique_id, CurrentServerSelectorSearch);
 
-                    if (flag_name_match || flag_url_match || flag_id_match)
+                    if (flag_name_match || flag_url_match || (SocketServer.name == string.Empty && flag_id_match))
                     {
                         string name = SocketServer.name.Trim() == string.Empty ? SocketServer.unique_id : SocketServer.name.Trim();
                         string id = SocketServer.unique_id;
