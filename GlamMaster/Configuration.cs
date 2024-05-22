@@ -1,7 +1,8 @@
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using GlamMaster.Structs;
 using System;
-using static System.Net.WebRequestMethods;
+using System.Collections.Generic;
 
 namespace GlamMaster;
 
@@ -10,8 +11,11 @@ public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 0;
 
-    public bool AutomaticallyConnectToSocketServer { get; set; } = false;
-    public string SocketServerURL { get; set; } = "http://localhost:3000";
+    public SocketServer? AutoConnectSocketServer { get; set; } = null;
+
+    public List<SocketServer> SocketServers { get; set; } = new List<SocketServer>();
+    public void AddSocketServer(SocketServer socketServer) => SocketServers.Add(socketServer);
+    public void RemoveSocketServer(SocketServer socketServer) => SocketServers.Remove(socketServer);
 
     [NonSerialized]
     private DalamudPluginInterface? PluginInterface;

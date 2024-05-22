@@ -1,9 +1,7 @@
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
-using Dalamud.Plugin.Services;
 using GlamMaster.UI;
 using GlamMaster.Services;
 using System.Collections.Generic;
@@ -35,6 +33,11 @@ public sealed class Plugin : IDalamudPlugin
         SetupUI();
         SetupCommands();
         EventsManager.RegisterAllEvents();
+
+        if (Service.Configuration.AutoConnectSocketServer != null && Service.ClientState.IsLoggedIn)
+        {
+            _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
+        }
     }
     private void SetupUI()
     {

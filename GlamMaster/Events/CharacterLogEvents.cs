@@ -11,9 +11,9 @@ namespace GlamMaster.Events
         {
             GlamLogger.Information("Character logged in.");
 
-            if (Service.Configuration.AutomaticallyConnectToSocketServer)
+            if (Service.Configuration.AutoConnectSocketServer != null)
             {
-                SocketManager.InitializeSocket();
+                _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
             }
         }
 

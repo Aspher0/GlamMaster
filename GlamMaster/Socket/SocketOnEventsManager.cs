@@ -115,7 +115,7 @@ namespace GlamMaster.Socket
             GlamLogger.Information(message);
 
             if (SocketManager.GetClient == client && isConnected.HasValue)
-                SocketManager.setSocketConnected(isConnected.Value);
+                SocketManager.IsSocketConnected = isConnected.Value;
         }
     }
 }
