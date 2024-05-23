@@ -19,7 +19,7 @@ public sealed class Plugin : IDalamudPlugin
     };
 
     public readonly WindowSystem WindowSystem = new("GlamMaster");
-    private MainWindow MainWindow { get; init; }
+    private UIBuilder MainWindow { get; init; }
 
     public Plugin(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
@@ -27,14 +27,14 @@ public sealed class Plugin : IDalamudPlugin
         pluginInterface.Create<Service>(Array.Empty<object>());
         Service.InitializeService(this);
 
-        MainWindow = new MainWindow(this);
+        MainWindow = new UIBuilder(this);
         WindowSystem.AddWindow(MainWindow);
 
         SetupUI();
         SetupCommands();
         EventsManager.RegisterAllEvents();
 
-        if (Service.Configuration.AutoConnectSocketServer != null && Service.ClientState.IsLoggedIn)
+        if (Service.Configuration!.AutoConnectSocketServer != null && Service.ClientState.IsLoggedIn)
         {
             _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
         }

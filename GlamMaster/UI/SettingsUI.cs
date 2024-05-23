@@ -10,7 +10,7 @@ using GlamMaster.Helpers;
 
 namespace GlamMaster.UI
 {
-    public static class SettingsUI
+    internal class SettingsUI
     {
         private static SocketServer? SelectedServer;
         private static string CurrentServerSelectorSearch = "";
@@ -23,8 +23,8 @@ namespace GlamMaster.UI
 
             ImGui.TextColored(ImGuiColors.DalamudViolet, "Server List");
 
-            string? SelectedServerId = SelectedServer?.unique_id;
-            List<SocketServer> SocketServers = Service.Configuration.SocketServers;
+            string? SelectedPlayerId = SelectedServer?.uniqueID;
+            List<SocketServer> SocketServers = Service.Configuration!.SocketServers;
 
             string state = SocketManager.IsConnecting ? "Connecting" : (SocketManager.IsSocketConnected ? "Connected" : "Disconnected");
 
@@ -42,16 +42,16 @@ namespace GlamMaster.UI
 
                     bool isProcessingServer = SocketManager.CurrentProcessingSocketServer?.Equals(SocketServer) ?? false;
 
+                    bool flag_id_match = GlobalHelper.RegExpMatch(SocketServer.uniqueID, CurrentServerSelectorSearch);
                     bool flag_name_match = GlobalHelper.RegExpMatch(SocketServer.name, CurrentServerSelectorSearch);
                     bool flag_url_match = GlobalHelper.RegExpMatch(SocketServer.serverURL, CurrentServerSelectorSearch);
-                    bool flag_id_match = GlobalHelper.RegExpMatch(SocketServer.unique_id, CurrentServerSelectorSearch);
 
                     if (flag_name_match || flag_url_match || (SocketServer.name == string.Empty && flag_id_match))
                     {
-                        string name = SocketServer.name.Trim() == string.Empty ? SocketServer.unique_id : SocketServer.name.Trim();
-                        string id = SocketServer.unique_id;
+                        string name = SocketServer.name.Trim() == string.Empty ? SocketServer.uniqueID : SocketServer.name.Trim();
+                        string id = SocketServer.uniqueID;
 
-                        if (ImGui.Selectable((isProcessingServer ? $"[{state}] " : "") + name, id == SelectedServerId))
+                        if (ImGui.Selectable((isProcessingServer ? $"[{state}] " : "") + name, id == SelectedPlayerId))
                         {
                             SelectedServer = SocketServer;
                             ViewModeServerSelector = "edit";
@@ -103,7 +103,7 @@ namespace GlamMaster.UI
             {
                 if (ViewModeServerSelector == "default")
                 {
-                    ImGui.TextWrapped("Press \"Add\" at the bottom of this window to add an entry to the whitelist.");
+                    ImGui.TextWrapped("Press \"Add\" at the bottom of this window to add a server.");
                 }
                 else if (ViewModeServerSelector == "edit")
                 {
@@ -111,7 +111,7 @@ namespace GlamMaster.UI
                     {
                         bool isProcessingServer = SocketManager.CurrentProcessingSocketServer?.Equals(SelectedServer) ?? false;
 
-                        ImGui.Text("Editing entry N°" + SelectedServer.unique_id);
+                        ImGui.Text("Editing entry N°" + SelectedServer.uniqueID);
                         ImGui.Spacing();
 
                         ImGui.Text("This server is");
@@ -228,7 +228,10 @@ namespace GlamMaster.UI
             {
                 if (SelectedServer != null)
                 {
-                    Service.Configuration.RemoveSocketServer((SocketServer)SelectedServer);
+                    if (Service.Configuration.AutoConnectSocketServer?.Equals(SelectedServer) ?? false)
+                        Service.Configuration.AutoConnectSocketServer = null;
+
+                    Service.Configuration.RemoveSocketServer(SelectedServer);
                     Service.Configuration.Save();
                 }
 
