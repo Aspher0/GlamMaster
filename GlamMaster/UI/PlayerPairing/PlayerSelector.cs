@@ -38,16 +38,14 @@ namespace GlamMaster.UI.PlayerPairing
 
                 foreach (var player in pairedPlayers)
                 {
-                    if (player == null) continue;
-
                     bool isEnabled = player.permissionsList.enabled;
-                    bool nameMatch = GlobalHelper.RegExpMatch($"{player.playerName}@{player.homeWorld}", CurrentPlayerSelectorSearch);
+                    bool nameMatch = GlobalHelper.RegExpMatch($"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}", CurrentPlayerSelectorSearch);
 
                     if (nameMatch)
                     {
                         bool emptyPairedPlayerEncKey = player.theirSecretEncryptionKey == string.Empty;
 
-                        string displayName = $"{player.playerName}@{player.homeWorld}";
+                        string displayName = $"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}";
                         string id = player.uniqueID;
                         string displayText = (!isEnabled && displayDisabledText ? "[Disabled] " : (emptyPairedPlayerEncKey ? "[Warning] " : "")) + displayName;
 

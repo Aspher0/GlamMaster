@@ -24,26 +24,8 @@ namespace GlamMaster.UI.GlamourControl
             {
                 ImGui.TextColored(ImGuiColors.DalamudViolet, "Paired Players");
 
-                PlayerSelector.DrawPlayerSelector(false);
+                GlamourControlPlayerSelector.DrawGlamourControlPlayerSelector();
                 ImGui.SameLine();
-
-                if (ImGui.BeginChild("GlamourControlPannel", new Vector2(0, -ImGui.GetFrameHeightWithSpacing()), true))
-                {
-                    ImGui.InputText("", ref testMessage, 200);
-
-                    if (ImGui.Button("Send global message TO EVERY OTHER PLAYER"))
-                    {
-                        if (Service.ClientState.LocalPlayer != null)
-                        {
-                            string message = $"{Service.ClientState.LocalPlayer!.Name.ToString()}: {testMessage}";
-
-                            _ = SocketManager.GetClient!.SendGlobalMessage(message);
-                            testMessage = string.Empty;
-                        }
-                    }
-
-                    ImGui.EndChild();
-                }
             }
 
             ImGui.EndChild();

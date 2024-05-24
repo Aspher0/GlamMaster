@@ -1,7 +1,5 @@
-using GlamMaster.Helpers;
 using GlamMaster.Structs;
 using ImGuiNET;
-using System;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;

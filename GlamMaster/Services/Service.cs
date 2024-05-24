@@ -3,7 +3,9 @@ using Dalamud.Game;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using GlamMaster.Socket;
+using Lumina.Excel.GeneratedSheets;
+using GlamMaster.Structs;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 
 #nullable enable
 namespace GlamMaster.Services
@@ -12,7 +14,33 @@ namespace GlamMaster.Services
     {
         public static Plugin? Plugin { get; private set; }
         public static Configuration? Configuration { get; private set; }
-        public static SocketManager? SocketManager { get; private set; }
+        public static Player? ConnectedPlayer { get; set; }
+
+        public static void Dispose()
+        {
+            ClearConnectedPlayer();
+        }
+
+        public static void ClearConnectedPlayer()
+        {
+            ConnectedPlayer = null;
+        }
+
+        public static void GetConnectedPlayer()
+        {
+            PlayerCharacter? playerCharacter = ClientState!.LocalPlayer;
+
+            if (playerCharacter != null)
+            {
+                string playerName = playerCharacter.Name.ToString();
+                World? playerHomeworld = DataManager.GetExcelSheet<World>()?.GetRow(playerCharacter.HomeWorld.Id);
+
+                if (playerHomeworld != null)
+                {
+                    ConnectedPlayer = new Player(playerName, playerHomeworld.Name.RawString);
+                }
+            }
+        }
 
         public static void InitializeService(Plugin plugin)
         {

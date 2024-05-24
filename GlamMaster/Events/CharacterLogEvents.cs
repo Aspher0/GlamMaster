@@ -1,7 +1,6 @@
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Socket;
-using ImGuiNET;
 
 namespace GlamMaster.Events
 {
@@ -10,6 +9,8 @@ namespace GlamMaster.Events
         public static void OnCharacterLogin()
         {
             GlamLogger.Information("Character logged in.");
+
+            Service.GetConnectedPlayer();
 
             if (Service.Configuration!.AutoConnectSocketServer != null)
             {
@@ -20,6 +21,8 @@ namespace GlamMaster.Events
         public static void OnCharacterLogout()
         {
             GlamLogger.Information("Character logged out.");
+
+            Service.ConnectedPlayer = null;
 
             if (SocketManager.IsConnecting)
             {

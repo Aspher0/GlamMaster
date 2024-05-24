@@ -6,7 +6,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
 {
     /*
      * A class that represents a player which the user paired with on their side.
-     * It stores the paired player name, its home world and a new empty list of permissions upon creation.
+     * It stores the paired player and a new empty list of permissions upon creation.
      * It also generates a secret encryption key that is meant to be sent to the other player for encryption and decryption, for security purposes
      */
 
@@ -14,8 +14,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
     {
         public string uniqueID; // A unique identifier
 
-        public string playerName; // The paired player first and last name (Ex. : "Some Player")
-        public string homeWorld; // The paired player world
+        public Player pairedPlayer; // The player paired with
 
         public PermissionsBuilder permissionsList = new PermissionsBuilder(); // A list of permissions this paired player has on the user
 
@@ -29,8 +28,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
             else
                 this.uniqueID = Guid.NewGuid().ToString();
 
-            this.playerName = playerName;
-            this.homeWorld = playerWorld;
+            pairedPlayer = new Player(playerName, playerWorld);
 
             if (permissionsList != null)
                 this.permissionsList = permissionsList;
@@ -38,7 +36,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
             if (mySecretEncryptionKey != null)
                 this.mySecretEncryptionKey = mySecretEncryptionKey;
             else
-                this.mySecretEncryptionKey = "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(250, true);
+                this.mySecretEncryptionKey = "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
 
             if (theirSecretEncryptionKey != null)
                 this.theirSecretEncryptionKey = theirSecretEncryptionKey;

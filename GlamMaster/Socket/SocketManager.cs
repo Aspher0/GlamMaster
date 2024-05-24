@@ -73,10 +73,8 @@ namespace GlamMaster.Socket
                 var options = new SocketIOOptions
                 {
                     Reconnection = true,
-                    ConnectionTimeout = TimeSpan.FromSeconds(5),
+                    ConnectionTimeout = TimeSpan.FromSeconds(30),
                     ReconnectionAttempts = 0,
-                    ReconnectionDelay = 5,
-                    ReconnectionDelayMax = 5,
                 };
 
                 Client = new SocketIOClient.SocketIO(serverURL, options);

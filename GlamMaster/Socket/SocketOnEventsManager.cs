@@ -2,6 +2,8 @@ using GlamMaster.Structs;
 using System.Collections.Generic;
 using System;
 using GlamMaster.Helpers;
+using GlamMaster.Socket.EmitEvents;
+using GlamMaster.Services;
 
 namespace GlamMaster.Socket
 {
@@ -17,13 +19,13 @@ namespace GlamMaster.Socket
         // This is a Dictionnary of socket events, linked to a handler
         private static readonly Dictionary<string, Action<SocketIOClient.SocketIO>> ConnectionEventHandlers = new Dictionary<string, Action<SocketIOClient.SocketIO>>()
         {
-            { nameof(SocketIOClient.SocketIO.OnConnected), client => client.OnConnected += (s, e) => HandleConnectionEvent(client, true, "Connected to the server.", true) },
-            { nameof(SocketIOClient.SocketIO.OnDisconnected), client => client.OnDisconnected += (s, e) => HandleConnectionEvent(client, false, "Disconnected from the server.", false) },
-            { nameof(SocketIOClient.SocketIO.OnError), client => client.OnError += (s, e) => HandleConnectionEvent(client, false, "Error while connecting to the server.", false) },
-            { nameof(SocketIOClient.SocketIO.OnReconnectAttempt), client => client.OnReconnectAttempt += (s, e) => HandleConnectionEvent(client, false, "Attempting to reconnect to the server.", null) },
-            { nameof(SocketIOClient.SocketIO.OnReconnected), client => client.OnReconnected += (s, e) => HandleConnectionEvent(client, true, "Successfully reconnected to the server.", true) },
-            { nameof(SocketIOClient.SocketIO.OnReconnectError), client => client.OnReconnectError += (s, e) => HandleConnectionEvent(client, false, "Server reconnection attempt failed.", false) },
-            { nameof(SocketIOClient.SocketIO.OnReconnectFailed), client => client.OnReconnectFailed += (s, e) => HandleConnectionEvent(client, false, "Failed to reconnect to the server.", false) },
+            { nameof(SocketIOClient.SocketIO.OnConnected), client => client.OnConnected += (s, e) => HandleConnectionEvent(client, "OnConnected", true, "Connected to the server.", true) },
+            { nameof(SocketIOClient.SocketIO.OnDisconnected), client => client.OnDisconnected += (s, e) => HandleConnectionEvent(client, "OnDisconnected", false, "Disconnected from the server.", false) },
+            { nameof(SocketIOClient.SocketIO.OnError), client => client.OnError += (s, e) => HandleConnectionEvent(client, "OnError", false, "Error while connecting to the server.", false) },
+            { nameof(SocketIOClient.SocketIO.OnReconnectAttempt), client => client.OnReconnectAttempt += (s, e) => HandleConnectionEvent(client, "OnReconnectAttempt", false, "Attempting to reconnect to the server.", null) },
+            { nameof(SocketIOClient.SocketIO.OnReconnected), client => client.OnReconnected += (s, e) => HandleConnectionEvent(client, "OnReconnected", true, "Successfully reconnected to the server.", true) },
+            { nameof(SocketIOClient.SocketIO.OnReconnectError), client => client.OnReconnectError += (s, e) => HandleConnectionEvent(client, "OnReconnectError", false, "Server reconnection attempt failed.", false) },
+            { nameof(SocketIOClient.SocketIO.OnReconnectFailed), client => client.OnReconnectFailed += (s, e) => HandleConnectionEvent(client, "OnReconnectFailed", false, "Failed to reconnect to the server.", false) },
         };
 
         public static void RegisterAllEvents(SocketIOClient.SocketIO client)
@@ -63,25 +65,25 @@ namespace GlamMaster.Socket
                 switch (eventName)
                 {
                     case nameof(SocketIOClient.SocketIO.OnConnected):
-                        client.OnConnected -= (s, e) => HandleConnectionEvent(client, true, "Connected to the server.", true);
+                        client.OnConnected -= (s, e) => HandleConnectionEvent(client, "OnConnected", true, "Connected to the server.", true);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnDisconnected):
-                        client.OnDisconnected -= (s, e) => HandleConnectionEvent(client, false, "Disconnected from the server.", false);
+                        client.OnDisconnected -= (s, e) => HandleConnectionEvent(client, "OnDisconnected", false, "Disconnected from the server.", false);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnError):
-                        client.OnError -= (s, e) => HandleConnectionEvent(client, false, "Error while connecting to the server.", false);
+                        client.OnError -= (s, e) => HandleConnectionEvent(client, "OnError", false, "Error while connecting to the server.", false);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnReconnectAttempt):
-                        client.OnReconnectAttempt -= (s, e) => HandleConnectionEvent(client, true, "Attempting to reconnect to the server.", null);
+                        client.OnReconnectAttempt -= (s, e) => HandleConnectionEvent(client, "OnReconnectAttempt", true, "Attempting to reconnect to the server.", null);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnReconnected):
-                        client.OnReconnected -= (s, e) => HandleConnectionEvent(client, true, "Successfully reconnected to the server.", true);
+                        client.OnReconnected -= (s, e) => HandleConnectionEvent(client, "OnReconnected", true, "Successfully reconnected to the server.", true);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnReconnectError):
-                        client.OnReconnectError -= (s, e) => HandleConnectionEvent(client, false, "Error trying to reconnect to the server.", false);
+                        client.OnReconnectError -= (s, e) => HandleConnectionEvent(client, "OnReconnectError", false, "Error trying to reconnect to the server.", false);
                         break;
                     case nameof(SocketIOClient.SocketIO.OnReconnectFailed):
-                        client.OnReconnectFailed -= (s, e) => HandleConnectionEvent(client, false, "Failed to reconnect to the server.", false);
+                        client.OnReconnectFailed -= (s, e) => HandleConnectionEvent(client, "OnReconnectFailed", false, "Failed to reconnect to the server.", false);
                         break;
                 }
             }
@@ -106,7 +108,7 @@ namespace GlamMaster.Socket
          * The function below makes it so that only one client can be connected to a server at a time.
          * If a socket is already connected to the server, clients will automatically be disposed and disconnected from the server.
          */
-        private static void HandleConnectionEvent(SocketIOClient.SocketIO client, bool isConnectEvent, string message, bool? isConnected)
+        private static void HandleConnectionEvent(SocketIOClient.SocketIO client, string socketEvent, bool isConnectEvent, string message, bool? isConnected)
         {
             if (isConnectEvent)
             {
@@ -119,7 +121,7 @@ namespace GlamMaster.Socket
                     return;
                 }
 
-                if (SocketManager.IsSocketConnected && SocketManager.GetClient != null)
+                if (SocketManager.GetClient != null && SocketManager.IsSocketConnected)
                 {
                     if (isConnectEvent)
                         GlamLogger.Information("GlamMaster already has an active server connection. Disposing this client now.");
@@ -133,6 +135,23 @@ namespace GlamMaster.Socket
 
             if (SocketManager.GetClient == client && isConnected.HasValue)
                 SocketManager.IsSocketConnected = isConnected.Value;
+
+            if ((socketEvent == "OnConnected" || socketEvent == "OnReconnected") && Service.ClientState.IsLoggedIn && Service.ConnectedPlayer != null)
+            {
+                // Emit connection message to the server, containing the currently logged player name and homeworld
+                string PlayerName = Service.ConnectedPlayer.playerName;
+                string PlayerHomeworld = Service.ConnectedPlayer.homeWorld;
+
+                SendClientInfos infos = new SendClientInfos(PlayerName, PlayerHomeworld);
+                _ = client.SendClientInfos(infos);
+            }
+
+            if (socketEvent == "OnDisconnected")
+            {
+                // Check if disconnected by server ?
+
+                _ = SocketManager.DisposeSocket(client, SocketManager.GetClient == client);
+            }
         }
     }
 }

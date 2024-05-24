@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using GlamMaster.Services;
-using System.Linq;
 using GlamMaster.Structs.WhitelistedPlayers;
 using System.Diagnostics;
 
@@ -73,7 +72,7 @@ namespace GlamMaster.Helpers
 
         public static PairedPlayer? TryGetExistingPairedPlayerInConfig(string playerName, string playerHomeworld)
         {
-            return Service.Configuration!.PairedPlayers.Find(player => player.playerName == playerName && player.homeWorld == playerHomeworld);
+            return Service.Configuration!.PairedPlayers.Find(player => player.pairedPlayer.playerName == playerName && player.pairedPlayer.homeWorld == playerHomeworld);
         }
 
         public static void OpenUrl(string url)

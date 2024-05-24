@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 namespace GlamMaster.Structs
 {
     /*
-     * Temporary JSON structure for the ReceiveServerPong event of the socket.
+     * Temporary JSON structure for the ReceiveServerMessage event of the socket.
      * Allows deserialization of the server's response
      * 
-     * Used in ReceiveServerPongHandler.cs
+     * Used in ReceiveServerMessageHandler.cs
      */
 
-    internal class ReceiveServerPongJSON
+    internal class ReceiveServerMessageJSON
     {
         [JsonPropertyName("type")]
         public required string Type { get; set; }

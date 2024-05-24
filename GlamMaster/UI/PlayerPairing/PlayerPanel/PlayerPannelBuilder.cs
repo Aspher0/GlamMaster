@@ -44,8 +44,8 @@ namespace GlamMaster.UI.PlayerPairing
 
         public static void DrawPlayerInfos(PairedPlayer SelectedPlayer)
         {
-            ImGui.Text($"Player Name: {SelectedPlayer.playerName}");
-            ImGui.Text($"Player Homeworld: {SelectedPlayer.homeWorld}");
+            ImGui.Text($"Player Name: {SelectedPlayer.pairedPlayer.playerName}");
+            ImGui.Text($"Player Homeworld: {SelectedPlayer.pairedPlayer.homeWorld}");
 
             ImGui.Spacing();
             ImGui.Separator();
@@ -75,7 +75,7 @@ namespace GlamMaster.UI.PlayerPairing
 
             if (emptyPairedPlayerEncKey)
             {
-                ImGui.TextColored(ImGuiColors.DalamudRed, $"Please, go to the \"Encryption Keys\" tab and paste {SelectedPlayer.playerName}'s encryption key.");
+                ImGui.TextColored(ImGuiColors.DalamudRed, $"Please, go to the \"Encryption Keys\" tab and paste {SelectedPlayer.pairedPlayer.playerName}'s encryption key.");
                 ImGui.TextColored(ImGuiColors.DalamudRed, $"If the key is not specified, most of the features won't work.");
             }
 

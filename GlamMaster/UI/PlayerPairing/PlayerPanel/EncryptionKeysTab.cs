@@ -21,11 +21,11 @@ namespace GlamMaster.UI.PlayerPairing
 
             if (emptyPairedPlayerEncKey)
             {
-                if (ImGui.Button($"Paste {SelectedPlayer.playerName}'s encryption key", new Vector2(availableWidth, 0)))
+                if (ImGui.Button($"Paste {SelectedPlayer.pairedPlayer.playerName}'s encryption key", new Vector2(availableWidth, 0)))
                 {
                     string fromClipboard = ImGui.GetClipboardText();
 
-                    if (!string.IsNullOrEmpty(fromClipboard) && fromClipboard.Length == 279 && fromClipboard.Substring(0, 20) == "GLAM_MASTER_ENC_KEY-")
+                    if (!string.IsNullOrEmpty(fromClipboard) && fromClipboard.Length == 79 && fromClipboard.Substring(0, 20) == "GLAM_MASTER_ENC_KEY-")
                     {
                         SelectedPlayer.theirSecretEncryptionKey = fromClipboard;
                         Service.Configuration!.Save();
@@ -35,13 +35,13 @@ namespace GlamMaster.UI.PlayerPairing
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.BeginTooltip();
-                    ImGui.Text($"Please, ask {SelectedPlayer.playerName} to send you their secret encryption key and paste it here.");
+                    ImGui.Text($"Please, ask {SelectedPlayer.pairedPlayer.playerName} to send you their secret encryption key and paste it here.");
                     ImGui.EndTooltip();
                 }
             }
             else
             {
-                string text = $"Reset {SelectedPlayer.playerName}'s encryption key";
+                string text = $"Reset {SelectedPlayer.pairedPlayer.playerName}'s encryption key";
                 bool ctrlPressed = ImGui.GetIO().KeyCtrl;
 
                 if (ctrlPressed)
@@ -63,7 +63,7 @@ namespace GlamMaster.UI.PlayerPairing
                 {
                     ImGui.BeginTooltip();
                     ImGui.Text("Hold CTRL to reset.");
-                    ImGui.Text($"Clicking this button will reset {SelectedPlayer.playerName}'s encryption key on your side.");
+                    ImGui.Text($"Clicking this button will reset {SelectedPlayer.pairedPlayer.playerName}'s encryption key on your side.");
                     ImGui.Text("Useful if the other player has regenerated their key.");
                     ImGui.EndTooltip();
                 }
@@ -78,7 +78,7 @@ namespace GlamMaster.UI.PlayerPairing
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text($"Click this button to copy your encryption key and send it to {SelectedPlayer.playerName}.");
+                ImGui.Text($"Click this button to copy your encryption key and send it to {SelectedPlayer.pairedPlayer.playerName}.");
                 ImGui.EndTooltip();
             }
         }
