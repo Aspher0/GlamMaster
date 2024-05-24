@@ -43,6 +43,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         Service.PluginInterface.UiBuilder.Draw += () => WindowSystem.Draw();
         Service.PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
+        Service.PluginInterface.UiBuilder.OpenConfigUi += OpenSettings;
     }
 
     private void SetupCommands()
@@ -64,6 +65,7 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
     public void ToggleMainUI() => MainWindow.Toggle();
+    public void OpenSettings() => MainWindow.Toggle();
 
 
     public async void Dispose()

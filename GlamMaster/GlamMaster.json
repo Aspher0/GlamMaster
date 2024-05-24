@@ -5,12 +5,10 @@
     "Description": "Let others control your fashion.",
     "ApplicableVersion": "any",
     "Tags": [
-        "glamourer",
-        "penumbra",
         "glamour",
-        "puppet",
+        "control",
         "master",
-        "puppetmaster",
-        "control"
+        "puppet",
+        "fashion"
     ]
 }

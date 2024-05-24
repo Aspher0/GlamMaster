@@ -2,19 +2,23 @@ using System;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using GlamMaster.Socket;
-using GlamMaster.Socket.EmitEvents;
+using GlamMaster.UI.PlayerPairing;
+using GlamMaster.UI.Settings;
+using GlamMaster.UI.GlamourControl;
+using GlamMaster.UI.HelpInfos;
 
 namespace GlamMaster.UI
 {
     public class UIBuilder : Window, IDisposable
     {
+        public string openTab = string.Empty;
+
         public UIBuilder(Plugin plugin)
             : base("Glamour Master##GlamMasterMain", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(375, 330),
+                MinimumSize = new Vector2(800, 600),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
         }
@@ -25,9 +29,15 @@ namespace GlamMaster.UI
         {
             if (ImGui.BeginTabBar("SettingsTabs"))
             {
-                if (ImGui.BeginTabItem("Glamour Master"))
+                if (ImGui.BeginTabItem("Glamour Control"))
                 {
-                    DrawMainUI();
+                    // Todo : On click on the tab or on click on a player, try to ping the player to check if they are connected on the server
+                    // If not, do not display control ui and end there
+                    // If yes, display it
+                    // Then retrieve their permissions to you maybe ? Or make a button
+                    // Other stuff ?
+
+                    GlamourControlUI.DrawGlamourControlUI();
                     ImGui.EndTabItem();
                 }
 
@@ -43,31 +53,14 @@ namespace GlamMaster.UI
                     ImGui.EndTabItem();
                 }
 
-                ImGui.EndTabBar();
-            }
-        }
-
-        async private void DrawMainUI()
-        {
-            ImGui.BeginChild("Main_UI##GlamMasterMain");
-
-            if (!SocketManager.IsSocketConnected)
-            {
-                ImGui.TextWrapped("Please, connect to a server by going in the settings tab.");
-            } else
-            {
-                if (ImGui.Button("Send a ping to the server"))
+                if (ImGui.BeginTabItem("Help & Infos"))
                 {
-                    var client = SocketManager.GetClient;
-
-                    if (client != null)
-                        await client.SendPing();
+                    HelpInfosUI.DrawHelpUI();
+                    ImGui.EndTabItem();
                 }
 
-                ImGui.Spacing();
+                ImGui.EndTabBar();
             }
-
-            ImGui.EndChild();
         }
     }
 }

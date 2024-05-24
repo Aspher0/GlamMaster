@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using GlamMaster.Services;
 using System.Linq;
 using GlamMaster.Structs.WhitelistedPlayers;
+using System.Diagnostics;
 
 namespace GlamMaster.Helpers
 {
@@ -70,9 +71,25 @@ namespace GlamMaster.Helpers
             return true;
         }
 
-        public static PairedPlayer? TryGetExistingPlayerAlreadyInConfig(string playerName, string playerHomeworld)
+        public static PairedPlayer? TryGetExistingPairedPlayerInConfig(string playerName, string playerHomeworld)
         {
             return Service.Configuration!.PairedPlayers.Find(player => player.playerName == playerName && player.homeWorld == playerHomeworld);
+        }
+
+        public static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                GlamLogger.Error($"Failed to open url: {url}");
+            }
         }
     }
 }

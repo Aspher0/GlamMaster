@@ -8,7 +8,7 @@ using GlamMaster.Structs;
 using System.Numerics;
 using GlamMaster.Helpers;
 
-namespace GlamMaster.UI
+namespace GlamMaster.UI.Settings
 {
     internal class SettingsUI
     {
@@ -30,7 +30,18 @@ namespace GlamMaster.UI
 
             if (ImGui.BeginChild("ServerSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
-                ImGui.InputText("Search", ref CurrentServerSelectorSearch, 200U);
+                float availableWidth = ImGui.GetContentRegionAvail().X;
+
+                ImGui.SetNextItemWidth(availableWidth);
+                ImGui.InputTextWithHint("##server_search", "Search", ref CurrentServerSelectorSearch, 200U);
+
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text("Filter by name or server url.");
+                    ImGui.EndTooltip();
+                }
+
                 ImGui.Spacing();
 
                 for (int index = 0; index < SocketServers.Count; index++)
@@ -103,16 +114,13 @@ namespace GlamMaster.UI
             {
                 if (ViewModeServerSelector == "default")
                 {
-                    ImGui.TextWrapped("Press \"Add\" at the bottom of this window to add a server.");
+                    ImGui.TextWrapped("Select a server or press the button in the bottom left corner to add one.");
                 }
                 else if (ViewModeServerSelector == "edit")
                 {
                     if (SelectedServer != null)
                     {
                         bool isProcessingServer = SocketManager.CurrentProcessingSocketServer?.Equals(SelectedServer) ?? false;
-
-                        ImGui.Text("Editing entry N°" + SelectedServer.uniqueID);
-                        ImGui.Spacing();
 
                         ImGui.Text("This server is");
                         ImGui.SameLine();
@@ -178,14 +186,21 @@ namespace GlamMaster.UI
                                 }
                                 else
                                 {
-                                    if (ImGui.Button("Connect to the Server"))
-                                    {
-                                        if (Service.ClientState.IsLoggedIn)
-                                            _ = SocketManager.InitializeSocket(SelectedServer);
-                                    }
+                                    bool isLoggedIn = Service.ClientState.IsLoggedIn;
 
-                                    if (!Service.ClientState.IsLoggedIn)
+                                    if (isLoggedIn)
                                     {
+                                        if (ImGui.Button("Connect to the Server") && isLoggedIn)
+                                        {
+                                            _ = SocketManager.InitializeSocket(SelectedServer);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+                                        ImGui.Button("Connect to the Server");
+                                        ImGui.PopStyleVar();
+
                                         if (ImGui.IsItemHovered())
                                         {
                                             ImGui.BeginTooltip();
@@ -224,19 +239,34 @@ namespace GlamMaster.UI
 
             ImGui.SameLine();
 
-            if (ImGui.Button("Delete"))
+            bool ctrlPressed = ImGui.GetIO().KeyCtrl;
+
+            if (ctrlPressed && SelectedServer != null)
             {
-                if (SelectedServer != null)
+                if (ImGui.Button("Delete"))
                 {
                     if (Service.Configuration.AutoConnectSocketServer?.Equals(SelectedServer) ?? false)
                         Service.Configuration.AutoConnectSocketServer = null;
 
                     Service.Configuration.RemoveSocketServer(SelectedServer);
                     Service.Configuration.Save();
-                }
 
-                SelectedServer = null;
-                ViewModeServerSelector = "default";
+                    SelectedServer = null;
+                    ViewModeServerSelector = "default";
+                }
+            }
+            else
+            {
+                ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+                ImGui.Button("Delete");
+                ImGui.PopStyleVar();
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("Hold CTRL to delete.");
+                ImGui.EndTooltip();
             }
 
             ImGui.EndChild();
