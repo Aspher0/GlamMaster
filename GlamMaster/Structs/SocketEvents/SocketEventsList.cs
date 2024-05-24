@@ -14,7 +14,8 @@ namespace GlamMaster.Structs
     {
         public static List<SocketEvent> OnEventsHandlers = new List<SocketEvent> // The list of SocketEvent
         {
-            new SocketEvent("serverPong", ReceiveServerPongHandler.Handle)
+            new SocketEvent("serverPong", ReceiveServerPongHandler.Handle),
+            new SocketEvent("receiveGlobalMessage", ReceiveGlobalMessageHandler.Handle)
         };
     }
 }
