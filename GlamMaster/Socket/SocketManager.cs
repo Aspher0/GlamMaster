@@ -5,6 +5,8 @@ using SocketIOClient;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SocketIO.Serializer.SystemTextJson;
+using System.Text.Json;
 
 namespace GlamMaster.Socket
 {
@@ -78,6 +80,10 @@ namespace GlamMaster.Socket
                 };
 
                 Client = new SocketIOClient.SocketIO(serverURL, options);
+                Client.Serializer = new SystemTextJsonSerializer(new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
                 SocketOnEventsManager.RegisterAllEvents(Client);
 

@@ -1,4 +1,4 @@
-namespace GlamMaster.Structs
+namespace GlamMaster.Structs.Payloads
 {
     /*
      * JSON structure for the SendClientInfos emit event of the socket.

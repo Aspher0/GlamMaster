@@ -1,5 +1,9 @@
 using Dalamud.Interface.Colors;
+using GlamMaster.Helpers;
 using GlamMaster.Services;
+using GlamMaster.Socket;
+using GlamMaster.Socket.EmitEvents;
+using GlamMaster.Structs.Payloads;
 using GlamMaster.Structs.WhitelistedPlayers;
 using ImGuiNET;
 using System.Numerics;
@@ -29,6 +33,9 @@ namespace GlamMaster.UI.PlayerPairing
                     {
                         SelectedPlayer.theirSecretEncryptionKey = fromClipboard;
                         Service.Configuration!.Save();
+                    } else
+                    {
+                        GlamLogger.PrintError("The pasted key is not valid or the clipboard is empty.");
                     }
                 }
 
@@ -80,6 +87,13 @@ namespace GlamMaster.UI.PlayerPairing
                 ImGui.BeginTooltip();
                 ImGui.Text($"Click this button to copy your encryption key and send it to {SelectedPlayer.pairedPlayer.playerName}.");
                 ImGui.EndTooltip();
+            }
+
+            if (ImGui.Button("Send Payload", new Vector2(availableWidth, 0)) && SocketManager.GetClient != null)
+            {
+                Payload payload = new Payload(PayloadType.PermissionsRequest);
+
+                _ = SocketManager.GetClient.SendPayloadToPlayer(SelectedPlayer, payload);
             }
         }
     }

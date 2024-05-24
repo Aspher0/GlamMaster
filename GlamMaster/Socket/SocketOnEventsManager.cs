@@ -139,17 +139,12 @@ namespace GlamMaster.Socket
             if ((socketEvent == "OnConnected" || socketEvent == "OnReconnected") && Service.ClientState.IsLoggedIn && Service.ConnectedPlayer != null)
             {
                 // Emit connection message to the server, containing the currently logged player name and homeworld
-                string PlayerName = Service.ConnectedPlayer.playerName;
-                string PlayerHomeworld = Service.ConnectedPlayer.homeWorld;
-
-                SendClientInfos infos = new SendClientInfos(PlayerName, PlayerHomeworld);
-                _ = client.SendClientInfos(infos);
+                
+                _ = client.SendClientInfos();
             }
 
             if (socketEvent == "OnDisconnected")
             {
-                // Check if disconnected by server ?
-
                 _ = SocketManager.DisposeSocket(client, SocketManager.GetClient == client);
             }
         }

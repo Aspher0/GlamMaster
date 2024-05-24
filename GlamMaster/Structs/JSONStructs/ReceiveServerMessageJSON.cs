@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace GlamMaster.Structs
 {
     /*
-     * Temporary JSON structure for the ReceiveServerMessage event of the socket.
+     * JSON structure for the ReceiveServerMessage event of the socket.
      * Allows deserialization of the server's response
      * 
      * Used in ReceiveServerMessageHandler.cs

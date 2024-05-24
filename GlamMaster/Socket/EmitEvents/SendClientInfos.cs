@@ -1,5 +1,6 @@
 using GlamMaster.Helpers;
-using GlamMaster.Structs;
+using GlamMaster.Services;
+using GlamMaster.Structs.Payloads;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -8,10 +9,15 @@ namespace GlamMaster.Socket.EmitEvents
 {
     public static class SendClientInfosExtension
     {
-        public static async Task SendClientInfos(this SocketIOClient.SocketIO client, SendClientInfos clientInfos)
+        public static async Task SendClientInfos(this SocketIOClient.SocketIO client)
         {
-            if (!SocketManager.IsClientValidAndConnected(client, true))
+            if (!SocketManager.IsClientValidAndConnected(client, true) || Service.ConnectedPlayer == null)
                 return;
+
+            string PlayerName = Service.ConnectedPlayer.playerName;
+            string PlayerHomeworld = Service.ConnectedPlayer.homeWorld;
+
+            SendClientInfos clientInfos = new SendClientInfos(PlayerName, PlayerHomeworld);
 
             try
             {
