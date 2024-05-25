@@ -4,9 +4,9 @@ using ImGuiNET;
 
 namespace GlamMaster.UI.PlayerPairing
 {
-    internal class GlamourerControlTab
+    internal class GlamourerControlPermissionsTab
     {
-        public static void DrawGlamourerControlTab(PairedPlayer SelectedPlayer)
+        public static void DrawGlamourerControlPermissionsTab(PairedPlayer SelectedPlayer)
         {
             bool canControlGlamourer = SelectedPlayer.permissionsList.glamourerControlPermissions.canControlGlamourer;
 

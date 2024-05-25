@@ -18,7 +18,7 @@ namespace GlamMaster.UI
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(800, 600),
+                MinimumSize = new Vector2(800, 680),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
         }

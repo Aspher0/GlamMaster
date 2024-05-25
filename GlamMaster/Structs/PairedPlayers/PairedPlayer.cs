@@ -36,7 +36,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
             if (mySecretEncryptionKey != null)
                 this.mySecretEncryptionKey = mySecretEncryptionKey;
             else
-                this.mySecretEncryptionKey = "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
+                GenerateNewEncryptionKey();
 
             if (theirSecretEncryptionKey != null)
                 this.theirSecretEncryptionKey = theirSecretEncryptionKey;
@@ -44,7 +44,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
 
         public void GenerateNewEncryptionKey()
         {
-            mySecretEncryptionKey = GlobalHelper.GenerateRandomString(100, true);
+            mySecretEncryptionKey = "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
         }
     }
 }

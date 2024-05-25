@@ -21,7 +21,8 @@ namespace GlamMaster.Socket.SocketOnEvents
 
                 if (pairedPlayer == null)
                 {
-                    GlamLogger.PrintError("Received a payload from an unauthorized player: " + data.FromPlayer.playerName);
+                    GlamLogger.Debug("Received a payload from an unauthorized player: " + data.FromPlayer.playerName);
+                    GlamLogger.PrintErrorChannel("Received a payload from an unauthorized player: " + data.FromPlayer.playerName);
                     return;
                 }
 
@@ -29,7 +30,8 @@ namespace GlamMaster.Socket.SocketOnEvents
 
                 if (payload == null)
                 {
-                    GlamLogger.PrintError($"Payload could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
+                    GlamLogger.Error($"Payload could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
+                    GlamLogger.PrintErrorChannel($"Payload could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
                     return;
                 }
 

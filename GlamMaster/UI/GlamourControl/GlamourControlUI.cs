@@ -1,10 +1,6 @@
 using Dalamud.Interface.Colors;
-using GlamMaster.Services;
 using GlamMaster.Socket;
-using GlamMaster.Socket.EmitEvents;
-using GlamMaster.UI.PlayerPairing;
 using ImGuiNET;
-using System.Numerics;
 
 namespace GlamMaster.UI.GlamourControl
 {
@@ -26,6 +22,7 @@ namespace GlamMaster.UI.GlamourControl
 
                 GlamourControlPlayerSelector.DrawGlamourControlPlayerSelector();
                 ImGui.SameLine();
+                GlamourControlPlayerPannelBuilder.DrawGlamourControlPanel();
             }
 
             ImGui.EndChild();

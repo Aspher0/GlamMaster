@@ -60,7 +60,7 @@ namespace GlamMaster.Socket
             if (!GlobalHelper.IsValidServerUrl(serverURL))
             {
                 GlamLogger.Information("Invalid Server URL.");
-                GlamLogger.PrintError("The server you have selected does not have a valid URL.");
+                GlamLogger.PrintErrorChannel("The server you have selected does not have a valid URL.");
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace GlamMaster.Socket
                 catch (Exception ex)
                 {
                     GlamLogger.Error("Failed to connect to the server: " + ex.Message);
-                    GlamLogger.PrintError("Failed to connect to the server.");
+                    GlamLogger.PrintErrorChannel("Failed to connect to the server.");
                     _ = DisposeSocket(Client, true, true);
                 }
             }
@@ -172,7 +172,7 @@ namespace GlamMaster.Socket
                 if (printMessage)
                 {
                     GlamLogger.Information("Trying to send a message but the client is not connected to any server.");
-                    GlamLogger.PrintError("Not connected to a server. Please, connect to a server in the settings tab.");
+                    GlamLogger.PrintErrorChannel("Not connected to a server. Please, connect to a server in the settings tab.");
                 }
 
                 return false;

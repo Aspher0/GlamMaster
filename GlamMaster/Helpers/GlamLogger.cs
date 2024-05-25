@@ -1,5 +1,6 @@
 using GlamMaster.Services;
 using Dalamud.Game.Text;
+using System;
 
 namespace GlamMaster.Helpers
 {
@@ -48,13 +49,18 @@ namespace GlamMaster.Helpers
             Service.ChatGui.Print(chatEntry);
         }
 
-        public static void PrintError(string message, bool printPluginName = true)
+        public static void PrintErrorChannel(string message, bool printPluginName = true)
         {
             XivChatEntry chat = new XivChatEntry();
             chat.Type = XivChatType.ErrorMessage;
             chat.Message = printPluginName ? "[GLAMOURMASTER] - " + message : message;
 
             Service.ChatGui.Print(chat);
+        }
+        
+        public static void PrintdError(string message, bool printPluginName = true)
+        {
+            Service.ChatGui.Print((printPluginName ? "[GLAMOURMASTER] - " : "") + "ERROR - " + message);
         }
     }
 }

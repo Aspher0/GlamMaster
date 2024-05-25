@@ -22,9 +22,9 @@ namespace GlamMaster.UI.PlayerPairing
 
                     if (ImGui.BeginTabBar("SettingsTabs"))
                     {
-                        if (ImGui.BeginTabItem("Glamourer Control"))
+                        if (ImGui.BeginTabItem("Glamourer Control Permissions"))
                         {
-                            GlamourerControlTab.DrawGlamourerControlTab(PlayerSelector.SelectedPlayer);
+                            GlamourerControlPermissionsTab.DrawGlamourerControlPermissionsTab(PlayerSelector.SelectedPlayer);
                             ImGui.EndTabItem();
                         }
                         
@@ -67,6 +67,11 @@ namespace GlamMaster.UI.PlayerPairing
                 ImGui.EndTooltip();
             }
 
+            if (!playerEnabled)
+            {
+                ImGui.TextColored(ImGuiColors.DalamudOrange, "This player is not enabled. They can not control you. Ignore if you only want to control them.");
+            }
+
             ImGui.Spacing();
             ImGui.Separator();
             ImGui.Spacing();
@@ -76,10 +81,10 @@ namespace GlamMaster.UI.PlayerPairing
             if (emptyPairedPlayerEncKey)
             {
                 ImGui.TextColored(ImGuiColors.DalamudRed, $"Please, go to the \"Encryption Keys\" tab and paste {SelectedPlayer.pairedPlayer.playerName}'s encryption key.");
-                ImGui.TextColored(ImGuiColors.DalamudRed, $"If the key is not specified, most of the features won't work.");
+                ImGui.TextColored(ImGuiColors.DalamudRed, "If the key is not specified, most of the features won't work.");
+                ImGui.Spacing();
             }
 
-            ImGui.Spacing();
         }
     }
 }

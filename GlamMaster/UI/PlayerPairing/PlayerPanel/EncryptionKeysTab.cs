@@ -35,7 +35,7 @@ namespace GlamMaster.UI.PlayerPairing
                         Service.Configuration!.Save();
                     } else
                     {
-                        GlamLogger.PrintError("The pasted key is not valid or the clipboard is empty.");
+                        GlamLogger.PrintErrorChannel("The pasted key is not valid or the clipboard is empty.");
                     }
                 }
 
@@ -89,11 +89,32 @@ namespace GlamMaster.UI.PlayerPairing
                 ImGui.EndTooltip();
             }
 
-            if (ImGui.Button("Send Payload", new Vector2(availableWidth, 0)) && SocketManager.GetClient != null)
-            {
-                Payload payload = new Payload(PayloadType.PermissionsRequest);
+            string text2 = "Regenerate your encryption key";
+            bool shiftPressed = ImGui.GetIO().KeyShift;
 
-                _ = SocketManager.GetClient.SendPayloadToPlayer(SelectedPlayer, payload);
+            if (shiftPressed)
+            {
+                if (ImGui.Button(text2, new Vector2(availableWidth, 0)) && shiftPressed)
+                {
+                    SelectedPlayer.GenerateNewEncryptionKey();
+                    Service.Configuration!.Save();
+
+                    GlamLogger.Print($"Your encryption key for {SelectedPlayer.pairedPlayer.playerName} has successfully been reset.");
+                }
+            }
+            else
+            {
+                ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+                ImGui.Button(text2, new Vector2(availableWidth, 0));
+                ImGui.PopStyleVar();
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("Hold SHIFT to generate a new encryption key.");
+                ImGui.Text("Clicking this button will reset your key. Useful if there are issues while decoding payloads.");
+                ImGui.EndTooltip();
             }
         }
     }

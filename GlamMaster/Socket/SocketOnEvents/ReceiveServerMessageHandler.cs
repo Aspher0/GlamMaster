@@ -15,10 +15,10 @@ namespace GlamMaster.Socket.SocketOnEvents
 
                 if (data.Type == "errorMessage")
                 {
-                    GlamLogger.PrintError("[Server] - " + data.Message, false);
+                    GlamLogger.PrintErrorChannel("[Server] - " + data.Message);
                 } else
                 {
-                    GlamLogger.Print("[Server] - " + data.Message, false);
+                    GlamLogger.Print("[Server] - " + data.Message);
                 }
             }
             catch (Exception ex)
