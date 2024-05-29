@@ -20,7 +20,7 @@ namespace GlamMaster.UI.PlayerPairing
             string? selectedPlayerId = SelectedPlayer?.uniqueID;
             List<PairedPlayer> pairedPlayers = Service.Configuration!.PairedPlayers;
 
-            if (ImGui.BeginChild("PlayerSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Player_Pairing_UI##PlayerSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 float availableWidth = ImGui.GetContentRegionAvail().X;
 
@@ -39,23 +39,23 @@ namespace GlamMaster.UI.PlayerPairing
                 foreach (var player in pairedPlayers)
                 {
                     bool isEnabled = player.permissionsList.enabled;
-                    bool nameMatch = GlobalHelper.RegExpMatch($"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}", CurrentPlayerSelectorSearch);
+                    bool emptyPairedPlayerEncKey = player.theirSecretEncryptionKey == string.Empty;
+
+                    string displayName = $"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}";
+                    string displayText = (!isEnabled && displayDisabledText ? "[Disabled] " : (emptyPairedPlayerEncKey ? "[Warning] " : "")) + displayName;
+                    string id = player.uniqueID;
+
+                    bool nameMatch = GlobalHelper.RegExpMatch(displayText, CurrentPlayerSelectorSearch);
 
                     if (nameMatch)
                     {
-                        bool emptyPairedPlayerEncKey = player.theirSecretEncryptionKey == string.Empty;
-
-                        string displayName = $"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}";
-                        string id = player.uniqueID;
-                        string displayText = (!isEnabled && displayDisabledText ? "[Disabled] " : (emptyPairedPlayerEncKey ? "[Warning] " : "")) + displayName;
-
                         if (ImGui.Selectable(displayText, id == selectedPlayerId))
                         {
                             SelectedPlayer = player;
                             ViewModePlayerSelector = "edit";
                         }
 
-                        HandleDragDrop(player, displayName, pairedPlayers.IndexOf(player));
+                        HandleDragDrop(displayName, pairedPlayers.IndexOf(player));
                     }
                 }
 
@@ -63,12 +63,12 @@ namespace GlamMaster.UI.PlayerPairing
             }
         }
 
-        private static void HandleDragDrop(PairedPlayer player, string displayName, int index)
+        private static void HandleDragDrop(string DisplayName, int index)
         {
             if (ImGui.BeginDragDropSource())
             {
                 CurrentDraggedPlayerIndex = index;
-                ImGui.Text("Dragging: " + displayName);
+                ImGui.Text("Dragging: " + DisplayName);
 
                 unsafe
                 {

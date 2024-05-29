@@ -14,7 +14,7 @@ namespace GlamMaster.UI.HelpInfos
         {
             List<HelpUITab> selectableTabs = HelpUITabsList.SelectableTabs;
 
-            if (ImGui.BeginChild("HelpTabSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Help_UI##HelpTabSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 foreach (var tab in selectableTabs)
                 {

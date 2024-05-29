@@ -18,7 +18,7 @@ namespace GlamMaster.UI.GlamourControl
             string? selectedPlayerId = SelectedPlayer?.uniqueID;
             List<PairedPlayer> pairedPlayers = Service.Configuration!.PairedPlayers;
 
-            if (ImGui.BeginChild("PlayerSelector##GlamourControl", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Glamour_Control_UI##PlayerSelectorList", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 float availableWidth = ImGui.GetContentRegionAvail().X;
 
@@ -36,27 +36,46 @@ namespace GlamMaster.UI.GlamourControl
 
                 foreach (var player in pairedPlayers)
                 {
-                    bool nameMatch = GlobalHelper.RegExpMatch($"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}", CurrentPlayerSelectorSearch);
+                    bool emptyPairedPlayerEncKey = player.theirSecretEncryptionKey == string.Empty;
+
+                    string displayName = $"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}";
+                    string displayText = (emptyPairedPlayerEncKey ? "[Warning] " : "") + displayName;
+                    string id = player.uniqueID;
+
+                    bool nameMatch = GlobalHelper.RegExpMatch(displayText, CurrentPlayerSelectorSearch);
 
                     if (nameMatch)
                     {
-                        bool emptyPairedPlayerEncKey = player.theirSecretEncryptionKey == string.Empty;
-
-                        string displayName = $"{player.pairedPlayer.playerName}@{player.pairedPlayer.homeWorld}";
-                        string id = player.uniqueID;
-                        string displayText = (emptyPairedPlayerEncKey ? "[Warning] " : "") + displayName;
-
                         if (ImGui.Selectable(displayText, id == selectedPlayerId))
                         {
                             SelectedPlayer = player;
                             ViewModePlayerSelector = "edit";
 
-                            UIBuilder.CheckAutoRequestPermissions(player);
+                            CheckAutoRequestPermissions(player);
                         }
                     }
                 }
 
                 ImGui.EndChild();
+            }
+        }
+
+        public static void CheckAutoRequestPermissions(PairedPlayer? SelectedPlayer)
+        {
+            /* Check if selected player != null
+             * If ok, check if automatically request permissions = true
+             * If not, do nothing
+             * If yes, start a loop where every 5 seconds, it will send a request permissions infos
+             * Also, request selected user's infos directly when tab is clicked
+             * 
+             * Do the same process on click on a user in the player pannel list
+             */
+
+            if (SelectedPlayer != null && SelectedPlayer.requestTheirPermissionsAutomatically)
+            {
+                // Start 5 seconds loop
+
+                SelectedPlayer.RequestTheirPermissions();
             }
         }
     }

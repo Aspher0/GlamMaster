@@ -7,7 +7,7 @@ namespace GlamMaster.UI.HelpInfos
     {
         public static void DrawHelpUI()
         {
-            ImGui.BeginChild("Help_UI##GlamMaster");
+            ImGui.BeginChild("Help_UI##MainUI");
 
             ImGui.TextColored(ImGuiColors.DalamudViolet, "Help & Infos");
 

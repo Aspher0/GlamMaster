@@ -10,7 +10,7 @@ namespace GlamMaster.UI.GlamourControl
     {
         public static void DrawGlamourControlPanel()
         {
-            if (ImGui.BeginChild("GlamourControlPlayerPanel", new Vector2(0.0f, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Glamour_Control_UI##PlayerPanel", new Vector2(0.0f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 if (GlamourControlPlayerSelector.ViewModePlayerSelector == "default")
                 {
@@ -20,7 +20,7 @@ namespace GlamMaster.UI.GlamourControl
                 {
                     DrawPlayerInfos(GlamourControlPlayerSelector.SelectedPlayer);
 
-                    if (ImGui.BeginTabBar("GlamourControlPlayerTabBar"))
+                    if (ImGui.BeginTabBar("PlayerPanel_Tabs"))
                     {
                         if (ImGui.BeginTabItem("General"))
                         {
@@ -37,9 +37,9 @@ namespace GlamMaster.UI.GlamourControl
                         ImGui.EndTabBar();
                     }
                 }
-            }
 
-            ImGui.EndChild();
+                ImGui.EndChild();
+            }
         }
 
         public static void DrawPlayerInfos(PairedPlayer SelectedPlayer)
@@ -56,7 +56,7 @@ namespace GlamMaster.UI.GlamourControl
                 Service.Configuration!.Save();
 
                 if (SelectedPlayer.requestTheirPermissionsAutomatically)
-                    UIBuilder.CheckAutoRequestPermissions(SelectedPlayer);
+                    GlamourControlPlayerSelector.CheckAutoRequestPermissions(SelectedPlayer);
             }
 
             if (ImGui.IsItemHovered())

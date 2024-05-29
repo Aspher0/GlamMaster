@@ -7,7 +7,7 @@ namespace GlamMaster.UI.HelpInfos
     {
         public static void DrawTabPannel()
         {
-            if (ImGui.BeginChild("TabPannel", new Vector2(0, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Help_UI##TabPannel", new Vector2(0, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 TabSelector.SelectedTab.CallBack();
 

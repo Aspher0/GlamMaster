@@ -7,7 +7,7 @@ namespace GlamMaster.UI.PlayerPairing
     {
         public static void DrawPlayerPairingUI()
         {
-            ImGui.BeginChild("Player_Pairing_UI##Main");
+            ImGui.BeginChild("Player_Pairing_UI##MainUI");
 
             ImGui.TextWrapped("This pannel is used to pair with people. Once paired with a player, send your encryption keys to each others.");
             ImGui.TextColored(ImGuiColors.DalamudOrange, "The permissions on this screen are permissions your want the other player to have on you.");
@@ -15,7 +15,7 @@ namespace GlamMaster.UI.PlayerPairing
 
             PlayerSelector.DrawPlayerSelector();
             ImGui.SameLine();
-            PlayerPairingPlayerPannelBuilder.DrawPlayerPanel();
+            PlayerPairingPlayerPanelBuilder.DrawPlayerPanel();
             PlayerActionBar.DrawPlayerActionBar();
 
             ImGui.EndChild();

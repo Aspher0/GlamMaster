@@ -10,7 +10,7 @@ namespace GlamMaster.UI.GlamourControl
 
         public static void DrawGlamourControlUI()
         {
-            ImGui.BeginChild("Glamour_Control_UI##GlamMaster");
+            ImGui.BeginChild("Glamour_Control_UI##MainUI");
 
             if (!SocketManager.IsSocketConnected)
             {

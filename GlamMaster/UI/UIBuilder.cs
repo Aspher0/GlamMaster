@@ -6,13 +6,12 @@ using GlamMaster.UI.PlayerPairing;
 using GlamMaster.UI.Settings;
 using GlamMaster.UI.GlamourControl;
 using GlamMaster.UI.HelpInfos;
-using GlamMaster.Structs.WhitelistedPlayers;
 
 namespace GlamMaster.UI
 {
     public class UIBuilder : Window, IDisposable
     {
-        private bool GlamourControlTabOpened = false;
+        private bool glamourControlTabOpened = false;
 
         public UIBuilder(Plugin plugin)
             : base("Glamour Master##GlamMasterMain", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
@@ -28,18 +27,18 @@ namespace GlamMaster.UI
 
         public override void Draw()
         {
-            if (ImGui.BeginTabBar("MainTabs"))
+            if (ImGui.BeginTabBar("MainWindowTabs"))
             {
                 bool glamourControlTabSelected = ImGui.BeginTabItem("Glamour Control");
 
-                if (glamourControlTabSelected && !GlamourControlTabOpened)
+                if (glamourControlTabSelected && !glamourControlTabOpened)
                 {
-                    CheckAutoRequestPermissions(GlamourControlPlayerSelector.SelectedPlayer);
-                    GlamourControlTabOpened = true;
+                    GlamourControlPlayerSelector.CheckAutoRequestPermissions(GlamourControlPlayerSelector.SelectedPlayer);
+                    glamourControlTabOpened = true;
                 }
-                else if (!glamourControlTabSelected && GlamourControlTabOpened)
+                else if (!glamourControlTabSelected && glamourControlTabOpened)
                 {
-                    GlamourControlTabOpened = false;
+                    glamourControlTabOpened = false;
                 }
 
                 if (glamourControlTabSelected)
@@ -56,7 +55,7 @@ namespace GlamMaster.UI
 
                 if (ImGui.BeginTabItem("Settings"))
                 {
-                    SettingsUI.DrawSettings();
+                    SettingsUI.DrawSettingsUI();
                     ImGui.EndTabItem();
                 }
 
@@ -67,25 +66,6 @@ namespace GlamMaster.UI
                 }
 
                 ImGui.EndTabBar();
-            }
-        }
-
-        public static void CheckAutoRequestPermissions(PairedPlayer? SelectedPlayer)
-        {
-            /* Check if selected player != null
-             * If ok, check if automatically request permissions = true
-             * If not, do nothing
-             * If yes, start a loop where every 5 seconds, it will send a request permissions infos
-             * Also, request selected user's infos directly when tab is clicked
-             * 
-             * Do the same process on click on a user in the player pannel list
-             */
-
-            if (SelectedPlayer != null && SelectedPlayer.requestTheirPermissionsAutomatically)
-            {
-                // Start 5 seconds loop
-
-                SelectedPlayer.RequestTheirPermissions();
             }
         }
     }

@@ -6,11 +6,11 @@ using System.Numerics;
 
 namespace GlamMaster.UI.PlayerPairing
 {
-    internal class PlayerPairingPlayerPannelBuilder
+    internal class PlayerPairingPlayerPanelBuilder
     {
         public static void DrawPlayerPanel()
         {
-            if (ImGui.BeginChild("PlayerPanel", new Vector2(0.0f, -ImGui.GetFrameHeightWithSpacing()), true))
+            if (ImGui.BeginChild("Player_Pairing_UI##PlayerPanel", new Vector2(0.0f, -ImGui.GetFrameHeightWithSpacing()), true))
             {
                 if (PlayerSelector.ViewModePlayerSelector == "default")
                 {
@@ -20,7 +20,7 @@ namespace GlamMaster.UI.PlayerPairing
                 {
                     DrawPlayerInfos(PlayerSelector.SelectedPlayer);
 
-                    if (ImGui.BeginTabBar("SettingsTabs"))
+                    if (ImGui.BeginTabBar("PlayerPairingSettingsTabs"))
                     {
                         if (ImGui.BeginTabItem("General"))
                         {
@@ -43,9 +43,9 @@ namespace GlamMaster.UI.PlayerPairing
                         ImGui.EndTabBar();
                     }
                 }
-            }
 
-            ImGui.EndChild();
+                ImGui.EndChild();
+            }
         }
 
         public static void DrawPlayerInfos(PairedPlayer SelectedPlayer)
