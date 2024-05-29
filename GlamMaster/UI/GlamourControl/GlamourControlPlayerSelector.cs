@@ -50,6 +50,8 @@ namespace GlamMaster.UI.GlamourControl
                         {
                             SelectedPlayer = player;
                             ViewModePlayerSelector = "edit";
+
+                            UIBuilder.CheckAutoRequestPermissions(player);
                         }
                     }
                 }

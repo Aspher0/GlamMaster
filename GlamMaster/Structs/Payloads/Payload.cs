@@ -1,21 +1,27 @@
+using GlamMaster.Structs.Permissions;
 using System;
 
 namespace GlamMaster.Structs.Payloads
 {
     public class Payload
     {
-        public PayloadType payloadType;
-        public string timestamp;
+        public PayloadType PayloadType;
+        public string Timestamp;
 
-        public Payload(PayloadType payloadType)
+        public PermissionsBuilder? Permissions;
+
+        public Payload(PayloadType PayloadType, PermissionsBuilder? Permissions = null)
         {
-            this.payloadType = payloadType;
-            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+
+            this.PayloadType = PayloadType;
+            this.Permissions = Permissions;
         }
     }
 
     public enum PayloadType
     {
-        PermissionsRequest
+        PermissionsRequest,
+        SendPermissions
     }
 }

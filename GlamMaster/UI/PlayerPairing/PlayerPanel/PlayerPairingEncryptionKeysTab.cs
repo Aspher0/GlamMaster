@@ -1,16 +1,13 @@
 using Dalamud.Interface.Colors;
 using GlamMaster.Helpers;
 using GlamMaster.Services;
-using GlamMaster.Socket;
-using GlamMaster.Socket.EmitEvents;
-using GlamMaster.Structs.Payloads;
 using GlamMaster.Structs.WhitelistedPlayers;
 using ImGuiNET;
 using System.Numerics;
 
 namespace GlamMaster.UI.PlayerPairing
 {
-    internal class EncryptionKeysTab
+    internal class PlayerPairingEncryptionKeysTab
     {
         public static void DrawEncryptionKeysTab(PairedPlayer SelectedPlayer)
         {

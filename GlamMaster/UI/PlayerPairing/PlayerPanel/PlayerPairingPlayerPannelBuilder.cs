@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace GlamMaster.UI.PlayerPairing
 {
-    internal class PlayerPannelBuilder
+    internal class PlayerPairingPlayerPannelBuilder
     {
         public static void DrawPlayerPanel()
         {
@@ -22,15 +22,21 @@ namespace GlamMaster.UI.PlayerPairing
 
                     if (ImGui.BeginTabBar("SettingsTabs"))
                     {
+                        if (ImGui.BeginTabItem("General"))
+                        {
+                            PlayerPairingGeneralTab.DrawGeneralTab(PlayerSelector.SelectedPlayer);
+                            ImGui.EndTabItem();
+                        }
+
                         if (ImGui.BeginTabItem("Glamourer Control Permissions"))
                         {
-                            GlamourerControlPermissionsTab.DrawGlamourerControlPermissionsTab(PlayerSelector.SelectedPlayer);
+                            PlayerPairingGlamourerControlPermissionsTab.DrawGlamourerControlPermissionsTab(PlayerSelector.SelectedPlayer);
                             ImGui.EndTabItem();
                         }
                         
                         if (ImGui.BeginTabItem("Encryption Keys"))
                         {
-                            EncryptionKeysTab.DrawEncryptionKeysTab(PlayerSelector.SelectedPlayer);
+                            PlayerPairingEncryptionKeysTab.DrawEncryptionKeysTab(PlayerSelector.SelectedPlayer);
                             ImGui.EndTabItem();
                         }
 

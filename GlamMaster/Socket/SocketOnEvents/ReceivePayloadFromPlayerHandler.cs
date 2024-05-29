@@ -1,4 +1,6 @@
 using GlamMaster.Helpers;
+using GlamMaster.Services;
+using GlamMaster.Socket.EmitEvents;
 using GlamMaster.Structs;
 using GlamMaster.Structs.Payloads;
 using GlamMaster.Structs.WhitelistedPlayers;
@@ -35,7 +37,33 @@ namespace GlamMaster.Socket.SocketOnEvents
                     return;
                 }
 
-                GlamLogger.Print($"Payload type: {payload.payloadType.ToString()}");
+                GlamLogger.Print($"Payload type: {payload.PayloadType.ToString()}");
+
+                if (SocketManager.GetClient != null)
+                {
+                    if (payload.PayloadType == PayloadType.PermissionsRequest)
+                    {
+                        // Send user's permissions to them
+                        pairedPlayer.SendYourPermissions();
+                    } else if (payload.PayloadType == PayloadType.SendPermissions)
+                    {
+                        // Receive their permissions to user
+                        if (payload.Permissions == null)
+                        {
+                            GlamLogger.Error($"The payload does not contain {data.FromPlayer.playerName}'s permissions.");
+                            GlamLogger.PrintErrorChannel($"The payload does not contain {data.FromPlayer.playerName}'s permissions.");
+                            return;
+                        }
+
+                        GlamLogger.Print($"Permissions of {data.FromPlayer.playerName} : Enabled: {payload.Permissions.enabled.ToString()}, Glamourer control: {payload.Permissions.glamourerControlPermissions.canControlGlamourer.ToString()}");
+
+                        pairedPlayer.theirPermissionsListToUser = payload.Permissions;
+                        Service.Configuration!.Save();
+                    }
+                } else
+                {
+                    GlamLogger.PrintErrorChannel("Not connected to a server.");
+                }
             }
             catch (Exception ex)
             {

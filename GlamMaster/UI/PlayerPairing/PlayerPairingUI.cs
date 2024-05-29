@@ -15,7 +15,7 @@ namespace GlamMaster.UI.PlayerPairing
 
             PlayerSelector.DrawPlayerSelector();
             ImGui.SameLine();
-            PlayerPannelBuilder.DrawPlayerPanel();
+            PlayerPairingPlayerPannelBuilder.DrawPlayerPanel();
             PlayerActionBar.DrawPlayerActionBar();
 
             ImGui.EndChild();

@@ -22,6 +22,12 @@ namespace GlamMaster.UI.GlamourControl
 
                     if (ImGui.BeginTabBar("GlamourControlPlayerTabBar"))
                     {
+                        if (ImGui.BeginTabItem("General"))
+                        {
+                            GlamourControlGeneralTab.DrawGeneralTab(GlamourControlPlayerSelector.SelectedPlayer);
+                            ImGui.EndTabItem();
+                        }
+
                         if (ImGui.BeginTabItem("Glamourer"))
                         {
                             GlamourerControlTab.DrawGlamourerControlTab(GlamourControlPlayerSelector.SelectedPlayer);
@@ -35,10 +41,30 @@ namespace GlamMaster.UI.GlamourControl
 
             ImGui.EndChild();
         }
+
         public static void DrawPlayerInfos(PairedPlayer SelectedPlayer)
         {
             ImGui.Text($"Player Name: {SelectedPlayer.pairedPlayer.playerName}");
             ImGui.Text($"Player Homeworld: {SelectedPlayer.pairedPlayer.homeWorld}");
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
+            if (ImGui.Checkbox("Automatically request their permissions", ref SelectedPlayer.requestTheirPermissionsAutomatically))
+            {
+                Service.Configuration!.Save();
+
+                if (SelectedPlayer.requestTheirPermissionsAutomatically)
+                    UIBuilder.CheckAutoRequestPermissions(SelectedPlayer);
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("If this box is checked, the plugin will automatically request their permissions when you want to control them.");
+                ImGui.EndTooltip();
+            }
 
             ImGui.Spacing();
             ImGui.Separator();
