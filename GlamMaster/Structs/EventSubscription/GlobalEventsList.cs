@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using GlamMaster.Events;
 using GlamMaster.Services;
+using System;
+using System.Collections.Generic;
 
 namespace GlamMaster.Structs
 {

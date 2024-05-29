@@ -1,9 +1,9 @@
-using GlamMaster.Structs;
-using System.Collections.Generic;
-using System;
 using GlamMaster.Helpers;
-using GlamMaster.Socket.EmitEvents;
 using GlamMaster.Services;
+using GlamMaster.Socket.EmitEvents;
+using GlamMaster.Structs;
+using System;
+using System.Collections.Generic;
 
 namespace GlamMaster.Socket
 {
@@ -139,7 +139,7 @@ namespace GlamMaster.Socket
             if ((socketEvent == "OnConnected" || socketEvent == "OnReconnected") && Service.ClientState.IsLoggedIn && Service.ConnectedPlayer != null)
             {
                 // Emit connection message to the server, containing the currently logged player name and homeworld
-                
+
                 _ = client.SendClientInfos();
             }
 

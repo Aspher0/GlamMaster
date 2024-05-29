@@ -1,12 +1,12 @@
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Structs;
+using SocketIO.Serializer.SystemTextJson;
 using SocketIOClient;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using SocketIO.Serializer.SystemTextJson;
-using System.Text.Json;
 
 namespace GlamMaster.Socket
 {

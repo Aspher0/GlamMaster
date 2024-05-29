@@ -27,7 +27,8 @@ namespace GlamMaster.Events
             if (SocketManager.IsConnecting)
             {
                 SocketManager.AbortSocketConnection(SocketManager.GetClient);
-            } else if (SocketManager.IsSocketConnected)
+            }
+            else if (SocketManager.IsSocketConnected)
             {
                 _ = SocketManager.DisconnectSocket(SocketManager.GetClient, true);
             }

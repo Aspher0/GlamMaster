@@ -33,7 +33,7 @@ namespace GlamMaster.UI.PlayerPairing
                             PlayerPairingGlamourerControlPermissionsTab.DrawGlamourerControlPermissionsTab(PlayerSelector.SelectedPlayer);
                             ImGui.EndTabItem();
                         }
-                        
+
                         if (ImGui.BeginTabItem("Encryption Keys"))
                         {
                             PlayerPairingEncryptionKeysTab.DrawEncryptionKeysTab(PlayerSelector.SelectedPlayer);

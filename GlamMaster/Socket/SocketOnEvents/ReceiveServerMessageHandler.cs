@@ -16,7 +16,8 @@ namespace GlamMaster.Socket.SocketOnEvents
                 if (data.Type == "errorMessage")
                 {
                     GlamLogger.PrintErrorChannel("[Server] - " + data.Message);
-                } else
+                }
+                else
                 {
                     GlamLogger.Print("[Server] - " + data.Message);
                 }

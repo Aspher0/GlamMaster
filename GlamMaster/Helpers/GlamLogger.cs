@@ -1,6 +1,5 @@
-using GlamMaster.Services;
 using Dalamud.Game.Text;
-using System;
+using GlamMaster.Services;
 
 namespace GlamMaster.Helpers
 {
@@ -57,7 +56,7 @@ namespace GlamMaster.Helpers
 
             Service.ChatGui.Print(chat);
         }
-        
+
         public static void PrintdError(string message, bool printPluginName = true)
         {
             Service.ChatGui.Print((printPluginName ? "[GLAMOURMASTER] - " : "") + "ERROR - " + message);

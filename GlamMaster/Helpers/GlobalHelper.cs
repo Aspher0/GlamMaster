@@ -1,9 +1,9 @@
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
 using GlamMaster.Services;
 using GlamMaster.Structs.WhitelistedPlayers;
+using System;
 using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GlamMaster.Helpers
 {
@@ -87,7 +87,7 @@ namespace GlamMaster.Helpers
             }
             catch (Exception ex)
             {
-                GlamLogger.Error($"Failed to open url: {url}");
+                GlamLogger.Error($"Failed to open url {url}: " + ex.Message);
             }
         }
     }

@@ -1,6 +1,5 @@
 using GlamMaster.Helpers;
 using GlamMaster.Services;
-using GlamMaster.Socket.EmitEvents;
 using GlamMaster.Structs;
 using GlamMaster.Structs.Payloads;
 using GlamMaster.Structs.WhitelistedPlayers;
@@ -17,14 +16,11 @@ namespace GlamMaster.Socket.SocketOnEvents
             {
                 var data = response.GetValue<FullPayloadJSON>();
 
-                GlamLogger.Print($"Received payload from {data.FromPlayer.playerName}@{data.FromPlayer.homeWorld}");
-
                 PairedPlayer? pairedPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(data.FromPlayer.playerName, data.FromPlayer.homeWorld);
 
                 if (pairedPlayer == null)
                 {
                     GlamLogger.Debug("Received a payload from an unauthorized player: " + data.FromPlayer.playerName);
-                    GlamLogger.PrintErrorChannel("Received a payload from an unauthorized player: " + data.FromPlayer.playerName);
                     return;
                 }
 
@@ -32,37 +28,29 @@ namespace GlamMaster.Socket.SocketOnEvents
 
                 if (payload == null)
                 {
-                    GlamLogger.Error($"Payload could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
-                    GlamLogger.PrintErrorChannel($"Payload could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
+                    GlamLogger.Error($"Received payload from {data.FromPlayer.playerName}@{data.FromPlayer.homeWorld} but it could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
+                    GlamLogger.Print($"Received payload from {data.FromPlayer.playerName}@{data.FromPlayer.homeWorld} but it could not be decrypted. This could be because {data.FromPlayer.playerName}'s encryption key has changed, or is not valid.");
                     return;
                 }
 
-                GlamLogger.Print($"Payload type: {payload.PayloadType.ToString()}");
-
-                if (SocketManager.GetClient != null)
+                if (payload.PayloadType == PayloadType.PermissionsRequest)
                 {
-                    if (payload.PayloadType == PayloadType.PermissionsRequest)
+                    // Send user's permissions to them
+                    pairedPlayer.SendYourPermissions();
+                }
+                else if (payload.PayloadType == PayloadType.SendPermissions)
+                {
+                    // Receive their permissions to user
+                    if (payload.Permissions == null)
                     {
-                        // Send user's permissions to them
-                        pairedPlayer.SendYourPermissions();
-                    } else if (payload.PayloadType == PayloadType.SendPermissions)
-                    {
-                        // Receive their permissions to user
-                        if (payload.Permissions == null)
-                        {
-                            GlamLogger.Error($"The payload does not contain {data.FromPlayer.playerName}'s permissions.");
-                            GlamLogger.PrintErrorChannel($"The payload does not contain {data.FromPlayer.playerName}'s permissions.");
-                            return;
-                        }
-
-                        GlamLogger.Print($"Permissions of {data.FromPlayer.playerName} : Enabled: {payload.Permissions.enabled.ToString()}, Glamourer control: {payload.Permissions.glamourerControlPermissions.canControlGlamourer.ToString()}");
-
-                        pairedPlayer.theirPermissionsListToUser = payload.Permissions;
-                        Service.Configuration!.Save();
+                        GlamLogger.Error($"The payload does not contain {data.FromPlayer.playerName}'s permissions.");
+                        return;
                     }
-                } else
-                {
-                    GlamLogger.PrintErrorChannel("Not connected to a server.");
+
+                    GlamLogger.Print($"Permissions of {data.FromPlayer.playerName} : Enabled: {payload.Permissions.enabled.ToString()}, Glamourer control: {payload.Permissions.glamourerControlPermissions.canControlGlamourer.ToString()}");
+
+                    pairedPlayer.theirPermissionsListToUser = payload.Permissions;
+                    Service.Configuration!.Save();
                 }
             }
             catch (Exception ex)

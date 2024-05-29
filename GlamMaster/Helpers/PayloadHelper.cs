@@ -1,11 +1,11 @@
+using GlamMaster.Structs;
+using GlamMaster.Structs.Payloads;
+using GlamMaster.Structs.WhitelistedPlayers;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using GlamMaster.Structs;
-using GlamMaster.Structs.WhitelistedPlayers;
-using System.Linq;
-using GlamMaster.Structs.Payloads;
 
 public static class PayloadHelper
 {

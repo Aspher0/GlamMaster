@@ -1,8 +1,8 @@
 using GlamMaster.Structs;
 using ImGuiNET;
-using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace GlamMaster.UI.HelpInfos
 {

@@ -6,7 +6,7 @@ namespace GlamMaster.Structs
      * A class that represents a socket server entry in the settings UI
      * Has a unique ID, a server url and a name
      */
-    
+
     public class SocketServer
     {
         public readonly string uniqueID; // A unique identifier

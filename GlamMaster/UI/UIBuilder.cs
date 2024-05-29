@@ -1,11 +1,11 @@
-using System;
-using System.Numerics;
 using Dalamud.Interface.Windowing;
-using ImGuiNET;
-using GlamMaster.UI.PlayerPairing;
-using GlamMaster.UI.Settings;
 using GlamMaster.UI.GlamourControl;
 using GlamMaster.UI.HelpInfos;
+using GlamMaster.UI.PlayerPairing;
+using GlamMaster.UI.Settings;
+using ImGuiNET;
+using System;
+using System.Numerics;
 
 namespace GlamMaster.UI
 {

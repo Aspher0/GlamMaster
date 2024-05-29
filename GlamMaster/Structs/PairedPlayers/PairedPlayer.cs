@@ -42,10 +42,7 @@ namespace GlamMaster.Structs.WhitelistedPlayers
             if (theirPermissionsListToUser != null)
                 this.theirPermissionsListToUser = theirPermissionsListToUser;
 
-            if (mySecretEncryptionKey != null)
-                this.mySecretEncryptionKey = mySecretEncryptionKey;
-            else
-                GenerateNewEncryptionKey();
+            this.mySecretEncryptionKey = (mySecretEncryptionKey != null) ? mySecretEncryptionKey : GenerateEncryptionKey();
 
             if (theirSecretEncryptionKey != null)
                 this.theirSecretEncryptionKey = theirSecretEncryptionKey;
@@ -53,9 +50,11 @@ namespace GlamMaster.Structs.WhitelistedPlayers
             this.requestTheirPermissionsAutomatically = requestTheirPermissionsAutomatically;
         }
 
+        public static string GenerateEncryptionKey() => "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
+
         public void GenerateNewEncryptionKey()
         {
-            mySecretEncryptionKey = "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
+            mySecretEncryptionKey = GenerateEncryptionKey();
         }
 
         public void RequestTheirPermissions()

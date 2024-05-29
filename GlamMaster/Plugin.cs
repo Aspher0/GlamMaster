@@ -1,13 +1,13 @@
 using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using Dalamud.Interface.Windowing;
-using GlamMaster.UI;
-using GlamMaster.Services;
-using System.Collections.Generic;
-using System;
-using GlamMaster.Socket;
 using GlamMaster.Events;
+using GlamMaster.Services;
+using GlamMaster.Socket;
+using GlamMaster.UI;
+using System;
+using System.Collections.Generic;
 
 namespace GlamMaster;
 

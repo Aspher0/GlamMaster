@@ -30,7 +30,8 @@ namespace GlamMaster.UI.PlayerPairing
                     {
                         SelectedPlayer.theirSecretEncryptionKey = fromClipboard;
                         Service.Configuration!.Save();
-                    } else
+                    }
+                    else
                     {
                         GlamLogger.PrintErrorChannel("The pasted key is not valid or the clipboard is empty.");
                     }

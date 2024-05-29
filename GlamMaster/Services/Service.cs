@@ -1,11 +1,11 @@
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using Lumina.Excel.GeneratedSheets;
 using GlamMaster.Structs;
-using Dalamud.Game.ClientState.Objects.SubKinds;
+using Lumina.Excel.GeneratedSheets;
 
 #nullable enable
 namespace GlamMaster.Services
@@ -47,7 +47,7 @@ namespace GlamMaster.Services
             Plugin = plugin;
             InitializeConfig();
         }
-        
+
         public static void InitializeConfig()
         {
             Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();

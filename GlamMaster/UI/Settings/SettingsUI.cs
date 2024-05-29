@@ -12,7 +12,7 @@ namespace GlamMaster.UI.Settings
             {
                 if (ImGui.BeginTabItem("General Settings"))
                 {
-                    
+
                     ImGui.EndTabItem();
                 }
 
