@@ -12,8 +12,7 @@ namespace GlamMaster.Services
 {
     public class Service
     {
-        public static Plugin? Plugin { get; private set; }
-        public static Configuration? Configuration { get; private set; }
+        public static Configuration? Configuration { get; set; }
         public static Player? ConnectedPlayer { get; set; }
 
         public static void Dispose()
@@ -28,7 +27,7 @@ namespace GlamMaster.Services
 
         public static void GetConnectedPlayer()
         {
-            PlayerCharacter? playerCharacter = ClientState!.LocalPlayer;
+            IPlayerCharacter? playerCharacter = ClientState!.LocalPlayer;
 
             if (playerCharacter != null)
             {
@@ -42,20 +41,17 @@ namespace GlamMaster.Services
             }
         }
 
-        public static void InitializeService(Plugin plugin)
+        public static void InitializeService()
         {
-            Plugin = plugin;
             InitializeConfig();
         }
 
         public static void InitializeConfig()
         {
-            Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Configuration.Initialize(PluginInterface);
+            Configuration = Plugin.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Save();
         }
 
-        [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
         [PluginService] public static IChatGui ChatGui { get; private set; } = null!;
         [PluginService] public static ICommandManager CommandManager { get; private set; } = null!;
         [PluginService] public static IPluginLog Logger { get; private set; } = null!;

@@ -13,6 +13,8 @@ namespace GlamMaster;
 
 public sealed class Plugin : IDalamudPlugin
 {
+    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+
     private readonly List<Tuple<string, string>> commandNames = new()
     {
         new Tuple<string, string>("/gmaster", "Opens Glamour Master.")
@@ -21,11 +23,10 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("GlamMaster");
     private UIBuilder MainWindow { get; init; }
 
-    public Plugin(
-        [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
+    public Plugin()
     {
-        pluginInterface.Create<Service>(Array.Empty<object>());
-        Service.InitializeService(this);
+        PluginInterface.Create<Service>(Array.Empty<object>());
+        Service.InitializeService();
 
         MainWindow = new UIBuilder(this);
         WindowSystem.AddWindow(MainWindow);
@@ -43,9 +44,9 @@ public sealed class Plugin : IDalamudPlugin
     }
     private void SetupUI()
     {
-        Service.PluginInterface.UiBuilder.Draw += () => WindowSystem.Draw();
-        Service.PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
-        Service.PluginInterface.UiBuilder.OpenConfigUi += OpenSettings;
+        PluginInterface.UiBuilder.Draw += () => WindowSystem.Draw();
+        PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
+        PluginInterface.UiBuilder.OpenConfigUi += OpenSettings;
     }
 
     private void SetupCommands()

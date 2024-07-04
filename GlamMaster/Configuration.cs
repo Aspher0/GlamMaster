@@ -1,5 +1,5 @@
 using Dalamud.Configuration;
-using Dalamud.Plugin;
+using GlamMaster.Services;
 using GlamMaster.Structs;
 using GlamMaster.Structs.WhitelistedPlayers;
 using System;
@@ -22,16 +22,8 @@ public class Configuration : IPluginConfiguration
     public void AddPairedPlayer(PairedPlayer pairedPlayer) => PairedPlayers.Add(pairedPlayer);
     public void RemovePairedPlayer(PairedPlayer pairedPlayer) => PairedPlayers.Remove(pairedPlayer);
 
-    [NonSerialized]
-    private DalamudPluginInterface? PluginInterface;
-
-    public void Initialize(DalamudPluginInterface pluginInterface)
-    {
-        PluginInterface = pluginInterface;
-    }
-
     public void Save()
     {
-        PluginInterface!.SavePluginConfig(this);
+        Plugin.PluginInterface.SavePluginConfig(this);
     }
 }

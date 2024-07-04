@@ -19,14 +19,14 @@ namespace GlamMaster.UI.PlayerPairing
                 bool isTargeting = Service.TargetManager.Target != null;
                 bool isTargetingPlayer = false;
                 PairedPlayer? alreadyFoundPlayer = null;
-                PlayerCharacter? playerCharacter = null;
+                IPlayerCharacter? playerCharacter = null;
                 World? targetedPlayerHomeWorld = null;
 
                 if (isTargeting)
                 {
                     var target = Service.TargetManager.Target;
 
-                    if (target is PlayerCharacter pc)
+                    if (target is IPlayerCharacter pc)
                     {
                         if (pc != Service.ClientState.LocalPlayer)
                         {
