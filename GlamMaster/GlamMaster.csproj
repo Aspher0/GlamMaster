@@ -19,11 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SocketIOClient" Version="3.1.1" />
-    <PackageReference Include="SocketIOClient.Newtonsoft.Json" Version="3.0.7" />
+    <Folder Include="UI\Settings\SettingsGeneralTab\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UI\Settings\SettingsGeneralTab\" />
+    <ProjectReference Include="..\..\..\Forked\socket.io-client-csharp\src\SocketIO.Serializer.NewtonsoftJson\SocketIO.Serializer.NewtonsoftJson.csproj" />
+    <ProjectReference Include="..\..\..\Forked\socket.io-client-csharp\src\SocketIOClient\SocketIOClient.csproj" />
   </ItemGroup>
 </Project>

@@ -24,6 +24,9 @@ namespace GlamMaster.Socket
 
         private static SemaphoreSlim ConnectionSemaphore = new SemaphoreSlim(1);
 
+        private static CancellationTokenSource? CancellationTokenSource;
+        public static CancellationTokenSource? GetCancellationTokenSource => CancellationTokenSource;
+
         public static async Task InitializeSocket(SocketServer? socketServer)
         {
             if (!Service.ClientState.IsLoggedIn)
@@ -65,12 +68,15 @@ namespace GlamMaster.Socket
             }
 
             CurrentProcessingSocketServer = socketServer;
-
             Connecting = true;
+
+            CancellationTokenSource?.Cancel();
+            CancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = CancellationTokenSource.Token;
 
             try
             {
-                await ConnectionSemaphore.WaitAsync();
+                await ConnectionSemaphore.WaitAsync(cancellationToken);
 
                 var options = new SocketIOOptions
                 {
@@ -91,12 +97,20 @@ namespace GlamMaster.Socket
 
                 try
                 {
-                    await Client.ConnectAsync();
+                    await Client.ConnectAsync(cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    GlamLogger.Error("Failed to connect to the server: " + ex.Message);
-                    GlamLogger.PrintErrorChannel("Failed to connect to the server.");
+                    if (ex is OperationCanceledException)
+                    {
+                        GlamLogger.Information("Connection attempt was canceled.");
+                    }
+                    else
+                    {
+                        GlamLogger.Error("Failed to connect to the server: " + ex.Message);
+                        GlamLogger.PrintErrorChannel("Failed to connect to the server.");
+                    }
+
                     _ = DisposeSocket(Client, true, true);
                 }
             }
@@ -110,7 +124,7 @@ namespace GlamMaster.Socket
         public static void AbortSocketConnection(SocketIOClient.SocketIO? client)
         {
             GlamLogger.Information("Aborting the connection to the server.");
-
+            CancellationTokenSource?.Cancel();
             _ = DisposeSocket(client, true, true);
         }
 
