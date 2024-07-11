@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Forked\socket.io-client-csharp\src\SocketIO.Serializer.NewtonsoftJson\SocketIO.Serializer.NewtonsoftJson.csproj" />
-    <ProjectReference Include="..\..\..\Forked\socket.io-client-csharp\src\SocketIOClient\SocketIOClient.csproj" />
+    <ProjectReference Include="..\socket.io-client-csharp\src\SocketIO.Serializer.NewtonsoftJson\SocketIO.Serializer.NewtonsoftJson.csproj" />
+    <ProjectReference Include="..\socket.io-client-csharp\src\SocketIOClient\SocketIOClient.csproj" />
   </ItemGroup>
 </Project>
