@@ -3,7 +3,7 @@ using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Structs.WhitelistedPlayers;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace GlamMaster.UI.PlayerPairing
 {
@@ -28,16 +28,19 @@ namespace GlamMaster.UI.PlayerPairing
 
                     if (target is IPlayerCharacter pc)
                     {
-                        if (pc != Service.ClientState.LocalPlayer)
+                        if (pc.Address != Service.ClientState.LocalPlayer?.Address)
                         {
                             isTargetingPlayer = true;
                             playerCharacter = pc;
-                            targetedPlayerHomeWorld = Service.DataManager.GetExcelSheet<World>()?.GetRow(playerCharacter.HomeWorld.Id);
+                            targetedPlayerHomeWorld = Service.DataManager.GetExcelSheet<World>()?.GetRow(playerCharacter.HomeWorld.RowId);
 
                             if (targetedPlayerHomeWorld != null)
                             {
-                                alreadyFoundPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Name.RawString);
-                                text = (alreadyFoundPlayer != null ? "Edit " : "Add ") + $"{playerCharacter.Name.TextValue}@{targetedPlayerHomeWorld.Name.RawString}";
+                                // alreadyFoundPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Name.RawString);
+                                alreadyFoundPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Value.Name.ToString());
+
+                                // text = (alreadyFoundPlayer != null ? "Edit " : "Add ") + $"{playerCharacter.Name.TextValue}@{targetedPlayerHomeWorld.Name.RawString}";
+                                text = (alreadyFoundPlayer != null ? "Edit " : "Add ") + $"{playerCharacter.Name.TextValue}@{targetedPlayerHomeWorld.Value.Name.ToString()}";
                             }
                             else
                             {
@@ -61,7 +64,8 @@ namespace GlamMaster.UI.PlayerPairing
                     }
                     else if (isTargetingPlayer && playerCharacter != null && targetedPlayerHomeWorld != null)
                     {
-                        var newPlayer = new PairedPlayer(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Name.RawString);
+                        // var newPlayer = new PairedPlayer(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Name.RawString);
+                        var newPlayer = new PairedPlayer(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Value.Name.ToString());
                         Service.Configuration!.AddPairedPlayer(newPlayer);
                         Service.Configuration.Save();
                         PlayerSelector.SelectedPlayer = newPlayer;

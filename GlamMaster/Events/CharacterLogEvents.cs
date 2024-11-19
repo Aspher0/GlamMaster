@@ -18,7 +18,7 @@ namespace GlamMaster.Events
             }
         }
 
-        public static void OnCharacterLogout()
+        public static void OnCharacterLogout(int type, int code)
         {
             GlamLogger.Information("Character logged out.");
 

@@ -5,7 +5,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using GlamMaster.Structs;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 #nullable enable
 namespace GlamMaster.Services
@@ -32,11 +32,12 @@ namespace GlamMaster.Services
             if (playerCharacter != null)
             {
                 string playerName = playerCharacter.Name.ToString();
-                World? playerHomeworld = DataManager.GetExcelSheet<World>()?.GetRow(playerCharacter.HomeWorld.Id);
+                World? playerHomeworld = DataManager.GetExcelSheet<World>()?.GetRow(playerCharacter.HomeWorld.RowId);
 
                 if (playerHomeworld != null)
                 {
-                    ConnectedPlayer = new Player(playerName, playerHomeworld.Name.RawString);
+                    // ConnectedPlayer = new Player(playerName, playerHomeworld.Name.RawString);
+                    ConnectedPlayer = new Player(playerName, playerHomeworld.Value.Name.ToString());
                 }
             }
         }
