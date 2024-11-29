@@ -19,10 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UI\Settings\SettingsGeneralTab\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+    <ProjectReference Include="..\Glamourer.Api\Glamourer.Api.csproj" />
+    <ProjectReference Include="..\OtterGui\OtterGui.csproj" />
+    <ProjectReference Include="..\Penumbra.Api\Penumbra.Api.csproj" />
     <ProjectReference Include="..\socket.io-client-csharp\src\SocketIO.Serializer.NewtonsoftJson\SocketIO.Serializer.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\socket.io-client-csharp\src\SocketIOClient\SocketIOClient.csproj" />
   </ItemGroup>

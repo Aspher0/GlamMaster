@@ -12,6 +12,8 @@ public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 0;
 
+    public bool OpenPluginOnLoad { get; set; } = false;
+
     public SocketServer? AutoConnectSocketServer { get; set; } = null; // The socket server to auto connect to on startup or on player login
 
     public List<SocketServer> SocketServers { get; set; } = new List<SocketServer>(); // The configured servers as seen in the settings tab

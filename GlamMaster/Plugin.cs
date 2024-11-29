@@ -2,7 +2,9 @@ using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using ECommons;
 using GlamMaster.Events;
+using GlamMaster.IPC.Penumbra;
 using GlamMaster.Services;
 using GlamMaster.Socket;
 using GlamMaster.UI;
@@ -28,6 +30,8 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.Create<Service>(Array.Empty<object>());
         Service.InitializeService();
 
+        ECommonsMain.Init(PluginInterface, this);
+
         MainWindow = new UIBuilder(this);
         WindowSystem.AddWindow(MainWindow);
 
@@ -41,6 +45,8 @@ public sealed class Plugin : IDalamudPlugin
         {
             _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
         }
+
+        if (Service.Configuration.OpenPluginOnLoad) MainWindow.IsOpen = true;
     }
     private void SetupUI()
     {
@@ -67,9 +73,9 @@ public sealed class Plugin : IDalamudPlugin
             ToggleMainUI();
         }
     }
+
     public void ToggleMainUI() => MainWindow.Toggle();
     public void OpenSettings() => MainWindow.Toggle();
-
 
     public async void Dispose()
     {
@@ -85,5 +91,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             Service.CommandManager.RemoveHandler(CommandName.Item1);
         }
+
+        ECommonsMain.Dispose();
     }
 }

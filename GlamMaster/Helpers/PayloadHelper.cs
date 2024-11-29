@@ -7,6 +7,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
+namespace GlamMaster.Helpers;
+
 public static class PayloadHelper
 {
     public static string EncryptPayload(object payload, string key)

@@ -1,4 +1,5 @@
 using Dalamud.Interface.Windowing;
+using GlamMaster.UI.DebugTesting;
 using GlamMaster.UI.GlamourControl;
 using GlamMaster.UI.HelpInfos;
 using GlamMaster.UI.PlayerPairing;
@@ -64,6 +65,14 @@ namespace GlamMaster.UI
                     HelpInfosUI.DrawHelpUI();
                     ImGui.EndTabItem();
                 }
+
+#if DEBUG
+                if (ImGui.BeginTabItem("Debug & Testing"))
+                {
+                    DebugTestingUI.DrawDebugTestingUI();
+                    ImGui.EndTabItem();
+                }
+#endif
 
                 ImGui.EndTabBar();
             }

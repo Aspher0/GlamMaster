@@ -2,30 +2,27 @@ using Dalamud.Interface.Colors;
 using GlamMaster.Socket;
 using ImGuiNET;
 
-namespace GlamMaster.UI.GlamourControl
+namespace GlamMaster.UI.GlamourControl;
+
+internal class GlamourControlUI
 {
-    internal class GlamourControlUI
+    public static void DrawGlamourControlUI()
     {
-        public static string testMessage = string.Empty;
+        ImGui.BeginChild("Glamour_Control_UI##MainUI");
 
-        public static void DrawGlamourControlUI()
+        if (!SocketManager.IsSocketConnected)
         {
-            ImGui.BeginChild("Glamour_Control_UI##MainUI");
-
-            if (!SocketManager.IsSocketConnected)
-            {
-                ImGui.TextWrapped("Please, connect to a server by going in the settings tab.");
-            }
-            else
-            {
-                ImGui.TextColored(ImGuiColors.DalamudViolet, "Paired Players");
-
-                GlamourControlPlayerSelector.DrawGlamourControlPlayerSelector();
-                ImGui.SameLine();
-                GlamourControlPlayerPannelBuilder.DrawGlamourControlPanel();
-            }
-
-            ImGui.EndChild();
+            ImGui.TextWrapped("Please, connect to a server by going in the settings tab.");
         }
+        else
+        {
+            ImGui.TextColored(ImGuiColors.DalamudViolet, "Paired Players");
+
+            GlamourControlPlayerSelector.DrawGlamourControlPlayerSelector();
+            ImGui.SameLine();
+            GlamourControlPlayerPannelBuilder.DrawGlamourControlPanel();
+        }
+
+        ImGui.EndChild();
     }
 }
