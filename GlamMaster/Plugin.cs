@@ -4,6 +4,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using ECommons;
 using GlamMaster.Events;
+using GlamMaster.Helpers;
 using GlamMaster.IPC.Penumbra;
 using GlamMaster.Services;
 using GlamMaster.Socket;
@@ -47,7 +48,19 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         if (Service.Configuration.OpenPluginOnLoad) MainWindow.IsOpen = true;
+
+        SetupAPIs();
     }
+
+    private void SetupAPIs()
+    {
+        if (IPCHelper.IsPenumbraAPIAvailable())
+        {
+            PenumbraEvents.OnPenumbraInitialized();
+            Service.PenumbraIPC_Caller.isPenumbraAvailable = true;
+        }
+    }
+
     private void SetupUI()
     {
         PluginInterface.UiBuilder.Draw += () => WindowSystem.Draw();

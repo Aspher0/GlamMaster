@@ -2,36 +2,35 @@ using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Socket;
 
-namespace GlamMaster.Events
+namespace GlamMaster.Events;
+
+internal class CharacterLogEvents
 {
-    internal class CharacterLogEvents
+    public static void OnCharacterLogin()
     {
-        public static void OnCharacterLogin()
+        GlamLogger.Information("Character logged in.");
+
+        Service.GetConnectedPlayer();
+
+        if (Service.Configuration!.AutoConnectSocketServer != null)
         {
-            GlamLogger.Information("Character logged in.");
-
-            Service.GetConnectedPlayer();
-
-            if (Service.Configuration!.AutoConnectSocketServer != null)
-            {
-                _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
-            }
+            _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
         }
+    }
 
-        public static void OnCharacterLogout(int type, int code)
+    public static void OnCharacterLogout(int type, int code)
+    {
+        GlamLogger.Information("Character logged out.");
+
+        Service.ConnectedPlayer = null;
+
+        if (SocketManager.IsConnecting)
         {
-            GlamLogger.Information("Character logged out.");
-
-            Service.ConnectedPlayer = null;
-
-            if (SocketManager.IsConnecting)
-            {
-                SocketManager.AbortSocketConnection(SocketManager.GetClient);
-            }
-            else if (SocketManager.IsSocketConnected)
-            {
-                _ = SocketManager.DisconnectSocket(SocketManager.GetClient, true);
-            }
+            SocketManager.AbortSocketConnection(SocketManager.GetClient);
+        }
+        else if (SocketManager.IsSocketConnected)
+        {
+            _ = SocketManager.DisconnectSocket(SocketManager.GetClient, true);
         }
     }
 }
