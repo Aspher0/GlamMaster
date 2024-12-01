@@ -1,21 +1,20 @@
-namespace GlamMaster.Structs.Payloads
+namespace GlamMaster.Structs.Payloads;
+
+/*
+ * JSON structure for the SendClientInfos emit event of the socket.
+ * Used to serialize socket data to send it to the server
+ * 
+ * Used in Socket/EmitEvents/SendClientInfos.cs
+ */
+
+public class SendClientInfos
 {
-    /*
-     * JSON structure for the SendClientInfos emit event of the socket.
-     * Used to serialize socket data to send it to the server
-     * 
-     * Used in ReceiveServerPongHandler.cs
-     */
+    public string PlayerName { get; set; }
+    public string PlayerHomeworld { get; set; }
 
-    public class SendClientInfos
+    public SendClientInfos(string playerName, string playerHomeworld)
     {
-        public string PlayerName { get; set; }
-        public string PlayerHomeworld { get; set; }
-
-        public SendClientInfos(string playerName, string playerHomeworld)
-        {
-            PlayerName = playerName;
-            PlayerHomeworld = playerHomeworld;
-        }
+        PlayerName = playerName;
+        PlayerHomeworld = playerHomeworld;
     }
 }

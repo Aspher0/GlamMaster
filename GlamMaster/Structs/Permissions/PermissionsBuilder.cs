@@ -1,25 +1,27 @@
-namespace GlamMaster.Structs.Permissions
+namespace GlamMaster.Structs.Permissions;
+
+/*
+ * A class that stores all of the permissions a player has.
+ * Each permissions modules are separated for better structuring.
+ * 
+ * Used in PairedPlayer.cs
+ */
+
+public class PermissionsBuilder
 {
-    /*
-     * A class that stores all of the permissions a player has.
-     * Each permissions modules are separated for better structuring.
-     * 
-     * Used in PairedPlayer.cs
-     */
+    public bool enabled = false;
 
-    public class PermissionsBuilder
+    public GlamourerControlPermissions glamourerControlPermissions = new GlamourerControlPermissions();
+    public PenumbraControlPermissions penumbraControlPermissions = new PenumbraControlPermissions();
+
+    public PermissionsBuilder(bool enabled = false, GlamourerControlPermissions? glamourerControlPermissions = null, PenumbraControlPermissions? penumbraControlPermissions = null)
     {
-        public bool enabled = true;
+        this.enabled = enabled;
 
-        public GlamourerControlPermissions glamourerControlPermissions = new GlamourerControlPermissions(); // GlamourerControlPermissions Module
+        if (glamourerControlPermissions != null)
+            this.glamourerControlPermissions = glamourerControlPermissions;
 
-        public PermissionsBuilder(bool? enabled = null, GlamourerControlPermissions? glamourerControlPermissions = null)
-        {
-            if (enabled != null)
-                this.enabled = enabled.Value;
-
-            if (glamourerControlPermissions != null)
-                this.glamourerControlPermissions = glamourerControlPermissions;
-        }
+        if (penumbraControlPermissions != null)
+            this.penumbraControlPermissions = penumbraControlPermissions;
     }
 }

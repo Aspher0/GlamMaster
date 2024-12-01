@@ -4,28 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace GlamMaster.UI.HelpInfos
+namespace GlamMaster.UI.HelpInfos;
+
+public class TabSelector
 {
-    internal class TabSelector
+    public static HelpUITab SelectedTab = HelpUITabsList.SelectableTabs.ElementAt(0);
+
+    public static void DrawTabSelector(bool displayDisabledText = true)
     {
-        public static HelpUITab SelectedTab = HelpUITabsList.SelectableTabs.ElementAt(0);
+        List<HelpUITab> selectableTabs = HelpUITabsList.SelectableTabs;
 
-        public static void DrawTabSelector(bool displayDisabledText = true)
+        if (ImGui.BeginChild("Help_UI##HelpTabSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
         {
-            List<HelpUITab> selectableTabs = HelpUITabsList.SelectableTabs;
-
-            if (ImGui.BeginChild("Help_UI##HelpTabSelector", new Vector2(225f, -ImGui.GetFrameHeightWithSpacing()), true))
+            foreach (var tab in selectableTabs)
             {
-                foreach (var tab in selectableTabs)
+                if (ImGui.Selectable(tab.TabName, tab == SelectedTab))
                 {
-                    if (ImGui.Selectable(tab.TabName, tab == SelectedTab))
-                    {
-                        SelectedTab = tab;
-                    }
+                    SelectedTab = tab;
                 }
-
-                ImGui.EndChild();
             }
+
+            ImGui.EndChild();
         }
     }
 }

@@ -8,191 +8,190 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GlamMaster.Socket
+namespace GlamMaster.Socket;
+
+public class SocketManager
 {
-    public class SocketManager
+    public static SocketServer? CurrentProcessingSocketServer = null;
+
+    public static bool IsSocketConnected;
+
+    private static bool Connecting = false;
+    public static bool IsConnecting => Connecting;
+
+    private static SocketIOClient.SocketIO? Client;
+    public static SocketIOClient.SocketIO? GetClient => Client;
+
+    private static SemaphoreSlim ConnectionSemaphore = new SemaphoreSlim(1);
+
+    private static CancellationTokenSource? CancellationTokenSource;
+    public static CancellationTokenSource? GetCancellationTokenSource => CancellationTokenSource;
+
+    public static async Task InitializeSocket(SocketServer? socketServer)
     {
-        public static SocketServer? CurrentProcessingSocketServer = null;
-
-        public static bool IsSocketConnected;
-
-        private static bool Connecting = false;
-        public static bool IsConnecting => Connecting;
-
-        private static SocketIOClient.SocketIO? Client;
-        public static SocketIOClient.SocketIO? GetClient => Client;
-
-        private static SemaphoreSlim ConnectionSemaphore = new SemaphoreSlim(1);
-
-        private static CancellationTokenSource? CancellationTokenSource;
-        public static CancellationTokenSource? GetCancellationTokenSource => CancellationTokenSource;
-
-        public static async Task InitializeSocket(SocketServer? socketServer)
+        if (!Service.ClientState.IsLoggedIn)
         {
-            if (!Service.ClientState.IsLoggedIn)
+            GlamLogger.Error("Cannot connect to the server, you are not logged in.");
+            return;
+        }
+
+        if (socketServer == null)
+        {
+            GlamLogger.Error("No server selected.");
+            return;
+        }
+
+        if (IsSocketConnected || Connecting)
+        {
+            if (IsSocketConnected)
             {
-                GlamLogger.Error("Cannot connect to the server, you are not logged in.");
-                return;
+                GlamLogger.Information("Client already connected.");
+                GlamLogger.Print("You are already connected to a server.");
             }
 
-            if (socketServer == null)
+            if (Connecting)
             {
-                GlamLogger.Error("No server selected.");
-                return;
+                GlamLogger.Information("Client already trying to connect to a server.");
+                GlamLogger.Print("The socket is already trying to connect to a server.");
             }
 
-            if (IsSocketConnected || Connecting)
+            return;
+        }
+
+        string serverURL = socketServer.serverURL;
+
+        if (!GlobalHelper.IsValidServerUrl(serverURL))
+        {
+            GlamLogger.Information("Invalid Server URL.");
+            GlamLogger.PrintErrorChannel("The server you have selected does not have a valid URL.");
+            return;
+        }
+
+        CurrentProcessingSocketServer = socketServer;
+        Connecting = true;
+
+        CancellationTokenSource?.Cancel();
+        CancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = CancellationTokenSource.Token;
+
+        try
+        {
+            await ConnectionSemaphore.WaitAsync(cancellationToken);
+
+            var options = new SocketIOOptions
             {
-                if (IsSocketConnected)
-                {
-                    GlamLogger.Information("Client already connected.");
-                    GlamLogger.Print("You are already connected to a server.");
-                }
+                Reconnection = true,
+                ConnectionTimeout = TimeSpan.FromSeconds(30),
+                ReconnectionAttempts = 0,
+            };
 
-                if (Connecting)
-                {
-                    GlamLogger.Information("Client already trying to connect to a server.");
-                    GlamLogger.Print("The socket is already trying to connect to a server.");
-                }
-
-                return;
-            }
-
-            string serverURL = socketServer.serverURL;
-
-            if (!GlobalHelper.IsValidServerUrl(serverURL))
+            Client = new SocketIOClient.SocketIO(serverURL, options);
+            Client.Serializer = new SystemTextJsonSerializer(new JsonSerializerOptions
             {
-                GlamLogger.Information("Invalid Server URL.");
-                GlamLogger.PrintErrorChannel("The server you have selected does not have a valid URL.");
-                return;
-            }
+                PropertyNameCaseInsensitive = true
+            });
 
-            CurrentProcessingSocketServer = socketServer;
-            Connecting = true;
+            SocketOnEventsManager.RegisterAllEvents(Client);
 
-            CancellationTokenSource?.Cancel();
-            CancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = CancellationTokenSource.Token;
+            GlamLogger.Information("Attempting to connect to the server " + serverURL);
 
             try
             {
-                await ConnectionSemaphore.WaitAsync(cancellationToken);
-
-                var options = new SocketIOOptions
-                {
-                    Reconnection = true,
-                    ConnectionTimeout = TimeSpan.FromSeconds(30),
-                    ReconnectionAttempts = 0,
-                };
-
-                Client = new SocketIOClient.SocketIO(serverURL, options);
-                Client.Serializer = new SystemTextJsonSerializer(new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                SocketOnEventsManager.RegisterAllEvents(Client);
-
-                GlamLogger.Information("Attempting to connect to the server " + serverURL);
-
-                try
-                {
-                    await Client.ConnectAsync(cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is OperationCanceledException)
-                    {
-                        GlamLogger.Information("Connection attempt was canceled.");
-                    }
-                    else
-                    {
-                        GlamLogger.Error("Failed to connect to the server: " + ex.Message);
-                        GlamLogger.PrintErrorChannel("Failed to connect to the server.");
-                    }
-
-                    _ = DisposeSocket(Client, true, true);
-                }
+                await Client.ConnectAsync(cancellationToken);
             }
-            finally
+            catch (Exception ex)
             {
-                Connecting = false;
-                ConnectionSemaphore.Release();
+                if (ex is OperationCanceledException)
+                {
+                    GlamLogger.Information("Connection attempt was canceled.");
+                }
+                else
+                {
+                    GlamLogger.Error("Failed to connect to the server: " + ex.Message);
+                    GlamLogger.PrintErrorChannel("Failed to connect to the server.");
+                }
+
+                _ = DisposeSocket(Client, true, true);
             }
         }
-
-        public static void AbortSocketConnection(SocketIOClient.SocketIO? client)
+        finally
         {
-            GlamLogger.Information("Aborting the connection to the server.");
-            CancellationTokenSource?.Cancel();
-            _ = DisposeSocket(client, true, true);
+            Connecting = false;
+            ConnectionSemaphore.Release();
         }
+    }
 
-        public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool resetVariables, bool printMessages = false)
+    public static void AbortSocketConnection(SocketIOClient.SocketIO? client)
+    {
+        GlamLogger.Information("Aborting the connection to the server.");
+        CancellationTokenSource?.Cancel();
+        _ = DisposeSocket(client, true, true);
+    }
+
+    public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool resetVariables, bool printMessages = false)
+    {
+        if (resetVariables)
         {
-            if (resetVariables)
-            {
-                Client = null;
-                IsSocketConnected = false;
-                CurrentProcessingSocketServer = null;
-            }
-
-            if (client != null)
-            {
-                SocketOnEventsManager.UnregisterAllEvents(client);
-
-                if (client.Connected)
-                {
-                    await client.DisconnectAsync();
-                }
-            }
-
-            client?.Dispose();
-            client = null;
-        }
-
-        public static async Task DisconnectSocket(SocketIOClient.SocketIO? client, bool printMessages = false)
-        {
-            if (client == null || !client.Connected)
-            {
-                if (printMessages)
-                {
-                    GlamLogger.Information("Attempting to disconnect a client that isn't connected.");
-                    GlamLogger.Print("The socket is not connected to a server.");
-                }
-            }
-            else if (client != null)
-            {
-                SocketOnEventsManager.UnregisterAllEvents(client);
-
-                if (client.Connected)
-                {
-                    await client.DisconnectAsync();
-                    IsSocketConnected = false;
-                }
-            }
-
-            client?.Dispose();
-            client = null;
-
             Client = null;
+            IsSocketConnected = false;
             CurrentProcessingSocketServer = null;
         }
 
-        public static bool IsClientValidAndConnected(SocketIOClient.SocketIO client, bool printMessage = false)
+        if (client != null)
         {
-            if (client == null || !client.Connected)
-            {
-                if (printMessage)
-                {
-                    GlamLogger.Information("Trying to send a message but the client is not connected to any server.");
-                    GlamLogger.PrintErrorChannel("Not connected to a server. Please, connect to a server in the settings tab.");
-                }
+            SocketOnEventsManager.UnregisterAllEvents(client);
 
-                return false;
+            if (client.Connected)
+            {
+                await client.DisconnectAsync();
+            }
+        }
+
+        client?.Dispose();
+        client = null;
+    }
+
+    public static async Task DisconnectSocket(SocketIOClient.SocketIO? client, bool printMessages = false)
+    {
+        if (client == null || !client.Connected)
+        {
+            if (printMessages)
+            {
+                GlamLogger.Information("Attempting to disconnect a client that isn't connected.");
+                GlamLogger.Print("The socket is not connected to a server.");
+            }
+        }
+        else if (client != null)
+        {
+            SocketOnEventsManager.UnregisterAllEvents(client);
+
+            if (client.Connected)
+            {
+                await client.DisconnectAsync();
+                IsSocketConnected = false;
+            }
+        }
+
+        client?.Dispose();
+        client = null;
+
+        Client = null;
+        CurrentProcessingSocketServer = null;
+    }
+
+    public static bool IsClientValidAndConnected(SocketIOClient.SocketIO client, bool printMessage = false)
+    {
+        if (client == null || !client.Connected)
+        {
+            if (printMessage)
+            {
+                GlamLogger.Information("Trying to send a message but the client is not connected to any server.");
+                GlamLogger.PrintErrorChannel("Not connected to a server. Please, connect to a server in the settings tab.");
             }
 
-            return true;
+            return false;
         }
+
+        return true;
     }
 }

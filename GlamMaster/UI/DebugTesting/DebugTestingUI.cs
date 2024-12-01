@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace GlamMaster.UI.DebugTesting;
 
-internal class DebugTestingUI
+public class DebugTestingUI
 {
     public static void DrawDebugTestingUI()
     {

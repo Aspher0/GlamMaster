@@ -2,7 +2,13 @@ using System;
 
 namespace GlamMaster.Structs;
 
-internal class GlobalEvent
+/*
+ * A class representing a set of events to register or unregister, with two Actions.
+ * 
+ * Used in GlobalEventsList.cs 
+ */
+
+public class GlobalEvent
 {
     public Action Register { get; }
     public Action Unregister { get; }

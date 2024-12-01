@@ -1,12 +1,11 @@
 using ImGuiNET;
 
-namespace GlamMaster.UI.HelpInfos
+namespace GlamMaster.UI.HelpInfos;
+
+public class PlayerPairingTab
 {
-    internal class PlayerPairingTab
+    public static void DrawPlayerPairingHelp()
     {
-        public static void DrawPlayerPairingHelp()
-        {
-            ImGui.Text("Player Pairing help");
-        }
+        ImGui.Text("Player Pairing help");
     }
 }

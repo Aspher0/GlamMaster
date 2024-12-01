@@ -5,76 +5,75 @@ using GlamMaster.Structs.Payloads;
 using GlamMaster.Structs.Permissions;
 using System;
 
-namespace GlamMaster.Structs.WhitelistedPlayers
+namespace GlamMaster.Structs.WhitelistedPlayers;
+
+/*
+ * A class that represents a player which the user paired with on their side.
+ * It stores the paired player and a new empty list of permissions upon creation.
+ * It also generates a secret encryption key that is meant to be sent to the other player for encryption and decryption, for security purposes
+ */
+
+public class PairedPlayer
 {
-    /*
-     * A class that represents a player which the user paired with on their side.
-     * It stores the paired player and a new empty list of permissions upon creation.
-     * It also generates a secret encryption key that is meant to be sent to the other player for encryption and decryption, for security purposes
-     */
+    public string uniqueID; // A unique identifier
 
-    public class PairedPlayer
+    public Player pairedPlayer; // The player paired with
+
+    public PermissionsBuilder permissionsList = new PermissionsBuilder(); // A list of permissions this paired player has on the user
+    public PermissionsBuilder? theirPermissionsListToUser = null; // A list of permissions the user has on the paired player, populated when the user requests the paired player permissions
+
+    public string theirSecretEncryptionKey = string.Empty; // The secret encryption key generated and sent by the paired player to the user
+    public string mySecretEncryptionKey; // An auto generated secret encryption for encrypting data before being sent to the server, for security purposes
+
+    public bool requestTheirPermissionsAutomatically = true;
+
+    public PairedPlayer(string playerName, string playerWorld, string? uniqueID = null, PermissionsBuilder? permissionsList = null, PermissionsBuilder? theirPermissionsListToUser = null, string? mySecretEncryptionKey = null, string? theirSecretEncryptionKey = null, bool requestTheirPermissionsAutomatically = true)
     {
-        public string uniqueID; // A unique identifier
+        if (uniqueID != null)
+            this.uniqueID = uniqueID;
+        else
+            this.uniqueID = Guid.NewGuid().ToString();
 
-        public Player pairedPlayer; // The player paired with
+        pairedPlayer = new Player(playerName, playerWorld);
 
-        public PermissionsBuilder permissionsList = new PermissionsBuilder(); // A list of permissions this paired player has on the user
-        public PermissionsBuilder? theirPermissionsListToUser = null; // A list of permissions the user has on the paired player, populated when the user requests the paired player permissions
+        if (permissionsList != null)
+            this.permissionsList = permissionsList;
 
-        public string theirSecretEncryptionKey = string.Empty; // The secret encryption key generated and sent by the paired player to the user
-        public string mySecretEncryptionKey; // An auto generated secret encryption for encrypting data before being sent to the server, for security purposes
+        if (theirPermissionsListToUser != null)
+            this.theirPermissionsListToUser = theirPermissionsListToUser;
 
-        public bool requestTheirPermissionsAutomatically = true;
+        this.mySecretEncryptionKey = (mySecretEncryptionKey != null) ? mySecretEncryptionKey : GenerateEncryptionKey();
 
-        public PairedPlayer(string playerName, string playerWorld, string? uniqueID = null, PermissionsBuilder? permissionsList = null, PermissionsBuilder? theirPermissionsListToUser = null, string? mySecretEncryptionKey = null, string? theirSecretEncryptionKey = null, bool requestTheirPermissionsAutomatically = true)
-        {
-            if (uniqueID != null)
-                this.uniqueID = uniqueID;
-            else
-                this.uniqueID = Guid.NewGuid().ToString();
+        if (theirSecretEncryptionKey != null)
+            this.theirSecretEncryptionKey = theirSecretEncryptionKey;
 
-            pairedPlayer = new Player(playerName, playerWorld);
+        this.requestTheirPermissionsAutomatically = requestTheirPermissionsAutomatically;
+    }
 
-            if (permissionsList != null)
-                this.permissionsList = permissionsList;
+    public static string GenerateEncryptionKey() => "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
 
-            if (theirPermissionsListToUser != null)
-                this.theirPermissionsListToUser = theirPermissionsListToUser;
+    public void GenerateNewEncryptionKey()
+    {
+        mySecretEncryptionKey = GenerateEncryptionKey();
+    }
 
-            this.mySecretEncryptionKey = (mySecretEncryptionKey != null) ? mySecretEncryptionKey : GenerateEncryptionKey();
+    public void RequestTheirPermissions()
+    {
+        if (SocketManager.GetClient == null)
+            return;
 
-            if (theirSecretEncryptionKey != null)
-                this.theirSecretEncryptionKey = theirSecretEncryptionKey;
+        Payload payload = new Payload(PayloadType.PermissionsRequest);
 
-            this.requestTheirPermissionsAutomatically = requestTheirPermissionsAutomatically;
-        }
+        _ = SocketManager.GetClient.SendPayloadToPlayer(this, payload);
+    }
 
-        public static string GenerateEncryptionKey() => "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
+    public void SendYourPermissions()
+    {
+        if (SocketManager.GetClient == null)
+            return;
 
-        public void GenerateNewEncryptionKey()
-        {
-            mySecretEncryptionKey = GenerateEncryptionKey();
-        }
+        Payload payload = new Payload(PayloadType.SendPermissions, permissionsList);
 
-        public void RequestTheirPermissions()
-        {
-            if (SocketManager.GetClient == null)
-                return;
-
-            Payload payload = new Payload(PayloadType.PermissionsRequest);
-
-            _ = SocketManager.GetClient.SendPayloadToPlayer(this, payload);
-        }
-
-        public void SendYourPermissions()
-        {
-            if (SocketManager.GetClient == null)
-                return;
-
-            Payload payload = new Payload(PayloadType.SendPermissions, permissionsList);
-
-            _ = SocketManager.GetClient.SendPayloadToPlayer(this, payload);
-        }
+        _ = SocketManager.GetClient.SendPayloadToPlayer(this, payload);
     }
 }

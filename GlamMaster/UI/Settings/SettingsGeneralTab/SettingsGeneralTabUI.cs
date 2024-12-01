@@ -1,14 +1,9 @@
 using GlamMaster.Services;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GlamMaster.UI.Settings;
 
-internal class SettingsGeneralTabUI
+public class SettingsGeneralTabUI
 {
     public static void DrawGeneralTabUI()
     {

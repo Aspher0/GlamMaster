@@ -1,12 +1,11 @@
 using ImGuiNET;
 
-namespace GlamMaster.UI.HelpInfos
+namespace GlamMaster.UI.HelpInfos;
+
+public class GlamourControlTab
 {
-    internal class GlamourControlTab
+    public static void DrawGlamourControlHelp()
     {
-        public static void DrawGlamourControlHelp()
-        {
-            ImGui.Text("Glamour Control help");
-        }
+        ImGui.Text("Glamour Control help");
     }
 }

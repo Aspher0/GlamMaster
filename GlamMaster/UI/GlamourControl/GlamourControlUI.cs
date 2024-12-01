@@ -4,7 +4,7 @@ using ImGuiNET;
 
 namespace GlamMaster.UI.GlamourControl;
 
-internal class GlamourControlUI
+public class GlamourControlUI
 {
     public static void DrawGlamourControlUI()
     {

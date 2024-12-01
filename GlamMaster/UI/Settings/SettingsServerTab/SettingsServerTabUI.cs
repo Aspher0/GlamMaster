@@ -2,7 +2,7 @@ using ImGuiNET;
 
 namespace GlamMaster.UI.Settings;
 
-internal class SettingsServerTabUI
+public class SettingsServerTabUI
 {
     public static void DrawServerTabUI()
     {

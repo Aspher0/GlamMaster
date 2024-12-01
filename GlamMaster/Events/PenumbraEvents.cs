@@ -1,13 +1,12 @@
 using GlamMaster.Helpers;
 using GlamMaster.Services;
-using GlamMaster.Structs;
 using Penumbra.Api.Enums;
 using Penumbra.Api.Helpers;
 using System;
 
 namespace GlamMaster.Events;
 
-internal class PenumbraEvents
+public class PenumbraEvents
 {
     public static EventSubscriber<ModSettingChange, Guid, string, bool>? _modSettingChangedSubscriber;
     public static EventSubscriber? _penumbraInitialized;

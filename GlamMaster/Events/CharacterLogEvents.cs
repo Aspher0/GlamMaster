@@ -4,7 +4,7 @@ using GlamMaster.Socket;
 
 namespace GlamMaster.Events;
 
-internal class CharacterLogEvents
+public class CharacterLogEvents
 {
     public static void OnCharacterLogin()
     {

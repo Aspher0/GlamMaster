@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace GlamMaster.Structs;
 
 /*
- * A set of lists that represents events that the plugin will register and unregister based on in game events such as player login and logout
- * Elements are GlobalEvent with invokable Actions for easy (un)registering
+ * A list that represents events that the plugin will register and unregister based on in game events such as player login and logout, penumbra events etc
+ * Elements are of type "GlobalEvent" with invokable Actions for easy (un)registering
  * 
  * Used in EventsManager.cs
  */
