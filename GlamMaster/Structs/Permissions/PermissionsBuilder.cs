@@ -11,17 +11,13 @@ public class PermissionsBuilder
 {
     public bool enabled = false;
 
-    public GlamourerControlPermissions glamourerControlPermissions = new GlamourerControlPermissions();
-    public PenumbraControlPermissions penumbraControlPermissions = new PenumbraControlPermissions();
+    public GlamourerControlPermissions? glamourerControlPermissions = null;
+    public PenumbraControlPermissions? penumbraControlPermissions = null;
 
-    public PermissionsBuilder(bool enabled = false, GlamourerControlPermissions? glamourerControlPermissions = null, PenumbraControlPermissions? penumbraControlPermissions = null)
+    public PermissionsBuilder(GlamourerControlPermissions? glamourerControlPermissions = null, PenumbraControlPermissions? penumbraControlPermissions = null, bool enabled = false)
     {
         this.enabled = enabled;
-
-        if (glamourerControlPermissions != null)
-            this.glamourerControlPermissions = glamourerControlPermissions;
-
-        if (penumbraControlPermissions != null)
-            this.penumbraControlPermissions = penumbraControlPermissions;
+        this.glamourerControlPermissions = glamourerControlPermissions;
+        this.penumbraControlPermissions = penumbraControlPermissions;
     }
 }

@@ -90,7 +90,7 @@ public class GlamourControlPlayerPannelBuilder
 
         if (emptyPairedPlayerEncKey)
         {
-            ImGui.TextColored(ImGuiColors.DalamudRed, $"Please, go to the \"Player Pairing\" tab and specify {SelectedPlayer.pairedPlayer.playerName}'s encryption key.");
+            ImGui.TextColored(ImGuiColors.DalamudRed, $"Please, go to the \"Player Pairing\" tab and paste {SelectedPlayer.pairedPlayer.playerName}'s encryption key.");
             ImGui.TextColored(ImGuiColors.DalamudRed, $"If the key is not specified, most of the features won't work.");
             ImGui.Spacing();
         }

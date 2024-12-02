@@ -12,6 +12,8 @@ public class PlayerPairingGlamourerTab
 
         var GlamourerPermissions = SelectedPlayer.permissionsList.glamourerControlPermissions;
 
+        // Enable Glamourer Control Module Checkbox
+
         bool canControlGlamourer = GlamourerPermissions.canControlGlamourer;
 
         if (ImGui.Checkbox("Enable the Glamourer Control module", ref canControlGlamourer))
@@ -25,6 +27,11 @@ public class PlayerPairingGlamourerTab
             ImGui.BeginTooltip();
             ImGui.Text("This will enable the Glamourer Control module, allowing that player to control your glamourer.");
             ImGui.EndTooltip();
+        }
+
+        if (GlamourerPermissions.canControlGlamourer)
+        {
+
         }
     }
 }

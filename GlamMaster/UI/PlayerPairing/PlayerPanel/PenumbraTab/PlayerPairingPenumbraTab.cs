@@ -12,7 +12,7 @@ public class PlayerPairingPenumbraTab
 
         var PenumbraPermissions = SelectedPlayer.permissionsList.penumbraControlPermissions;
 
-        // Enable the module Checkbox
+        // Enable Penumbra Control Module Checkbox
 
         bool canControlPenumbra = PenumbraPermissions.CanControlPenumbra;
 

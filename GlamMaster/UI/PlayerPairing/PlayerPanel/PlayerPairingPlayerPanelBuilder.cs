@@ -30,17 +30,17 @@ public class PlayerPairingPlayerPanelBuilder
                         ImGui.EndTabItem();
                     }
 
-                    if (!emptyPairedPlayerEncKey)
+                    if (!emptyPairedPlayerEncKey && PlayerSelector.SelectedPlayer.permissionsList.enabled)
                     {
-                        if (ImGui.BeginTabItem("Glamourer"))
-                        {
-                            PlayerPairingGlamourerTab.DrawGlamourerPermissionsTab(PlayerSelector.SelectedPlayer);
-                            ImGui.EndTabItem();
-                        }
-
                         if (ImGui.BeginTabItem("Penumbra"))
                         {
                             PlayerPairingPenumbraTab.DrawPenumbraPermissionsTab(PlayerSelector.SelectedPlayer);
+                            ImGui.EndTabItem();
+                        }
+
+                        if (ImGui.BeginTabItem("Glamourer"))
+                        {
+                            PlayerPairingGlamourerTab.DrawGlamourerPermissionsTab(PlayerSelector.SelectedPlayer);
                             ImGui.EndTabItem();
                         }
                     }

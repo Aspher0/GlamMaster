@@ -47,10 +47,30 @@ public static class ReceivePermissionsPayloadFromPlayerHandler
                     return;
                 }
 
-                GlamLogger.Print($"Permissions of {data.FromPlayer.playerName} : Enabled: {payload.Permissions.enabled.ToString()}, Glamourer control: {payload.Permissions.glamourerControlPermissions.canControlGlamourer.ToString()}");
-
                 pairedPlayer.theirPermissionsListToUser = payload.Permissions;
                 Service.Configuration!.Save();
+
+                GlamLogger.Debug($"Permissions of {data.FromPlayer.playerName} - Enabled: {payload.Permissions.enabled.ToString()}.");
+
+                if (!payload.Permissions.enabled)
+                    return;
+
+                GlamLogger.Debug($"Glamourer control status: {payload.Permissions.glamourerControlPermissions?.canControlGlamourer.ToString() ?? "Disallowed, or Glamourer unavailable."}.");
+
+                if (payload.Permissions.penumbraControlPermissions == null)
+                {
+                    GlamLogger.Debug($"Penumbra control status: Disallowed or Penumbra Unavailable on their end.");
+                } else
+                {
+                    GlamLogger.Debug($"Penumbra control status: {(payload.Permissions.penumbraControlPermissions.CanControlPenumbra ? "Disallowed" : "Allowed")}.");
+
+                    if (payload.Permissions.penumbraControlPermissions.CanControlPenumbra)
+                    {
+                        GlamLogger.Debug($"Can delete mods : {(payload.Permissions.penumbraControlPermissions.CanDeleteMods ? "Disallowed" : "Allowed")}.");
+                        GlamLogger.Debug($"Can install mods : {(payload.Permissions.penumbraControlPermissions.CanInstallMods ? "Disallowed" : "Allowed")}.");
+                        GlamLogger.Debug($"Can view full mod paths : {(payload.Permissions.penumbraControlPermissions.CanViewFullModPaths ? "Disallowed" : "Allowed")}.");
+                    }
+                }
             }
         }
         catch (Exception ex)

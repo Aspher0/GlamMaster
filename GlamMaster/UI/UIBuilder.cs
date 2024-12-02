@@ -32,6 +32,7 @@ public class UIBuilder : Window, IDisposable
         {
             bool glamourControlTabSelected = ImGui.BeginTabItem("Glamour Control");
 
+            // Prevents the "CheckAutoRequestPermissions" function to loop, and, instead, run it only once when you open the tab.
             if (glamourControlTabSelected && !glamourControlTabOpened)
             {
                 GlamourControlPlayerSelector.CheckAutoRequestPermissions(GlamourControlPlayerSelector.SelectedPlayer);
@@ -39,6 +40,7 @@ public class UIBuilder : Window, IDisposable
             }
             else if (!glamourControlTabSelected && glamourControlTabOpened)
             {
+                GlamourControlPlayerSelector.StopTimer();
                 glamourControlTabOpened = false;
             }
 

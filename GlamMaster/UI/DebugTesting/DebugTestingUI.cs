@@ -23,7 +23,7 @@ public class DebugTestingUI
                     {
                         if (ImGui.Button("Redraw Local Player"))
                         {
-                            Service.PenumbraIPC_Caller.RedrawPlayer(0);
+                            Service.PenumbraIPC_Caller.RedrawObject(0);
                         }
                     }
 

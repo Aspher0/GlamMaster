@@ -40,11 +40,11 @@ public class PenumbraIPC_Caller
     private readonly GetModPath penumbraGetModPath = new(Plugin.PluginInterface);
     public (PenumbraApiEc, string FullPath, bool FullDefault, bool NameDefault) GetModPath(string modDirectory, string modName = "") => penumbraGetModPath.Invoke(modDirectory, modName);
 
-    public void RedrawPlayer(int playerGameObjectIndex)
+    public void RedrawObject(int gameObjectIndex)
     {
         try
         {
-            new RedrawObject(Plugin.PluginInterface).Invoke(playerGameObjectIndex);
+            new RedrawObject(Plugin.PluginInterface).Invoke(gameObjectIndex);
         }
         catch (Exception e)
         {

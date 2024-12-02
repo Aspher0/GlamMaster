@@ -1,4 +1,5 @@
 using GlamMaster.Helpers;
+using GlamMaster.Services;
 using GlamMaster.Socket;
 using GlamMaster.Socket.EmitEvents;
 using GlamMaster.Structs.Payloads;
@@ -19,7 +20,7 @@ public class PairedPlayer
 
     public Player pairedPlayer; // The player paired with
 
-    public PermissionsBuilder permissionsList = new PermissionsBuilder(); // A list of permissions this paired player has on the user
+    public PermissionsBuilder permissionsList = new PermissionsBuilder(new(), new()); // A list of permissions this paired player has on the user
     public PermissionsBuilder? theirPermissionsListToUser = null; // A list of permissions the user has on the paired player, populated when the user requests the paired player permissions
 
     public string theirSecretEncryptionKey = string.Empty; // The secret encryption key generated and sent by the paired player to the user
@@ -72,8 +73,35 @@ public class PairedPlayer
         if (SocketManager.GetClient == null)
             return;
 
-        Payload payload = new Payload(PayloadType.SendPermissions, permissionsList);
+        PermissionsBuilder cleanedPermissionsList = GenerateCleanedPermissionsList();
+
+        Payload payload = new Payload(PayloadType.SendPermissions, cleanedPermissionsList);
 
         _ = SocketManager.GetClient.SendPayloadToPlayer(this, payload);
+    }
+
+    /*
+     * Will generate a clean PermissionsBuilder and return it
+     * 
+     * The cleaned version will be exempt of Penumbra/Glamourer (etc) permissions if they haven't been enabled or if their respective IPCs are not available.
+     */
+    public PermissionsBuilder GenerateCleanedPermissionsList()
+    {
+        if (!permissionsList.enabled)
+            return new PermissionsBuilder(null, null, permissionsList.enabled);
+
+        var currentGlamourerPermissions = permissionsList.glamourerControlPermissions;
+        var currentPenumbraPermissions = permissionsList.penumbraControlPermissions;
+
+        GlamourerControlPermissions? glamourerControlPermissions = null;
+        PenumbraControlPermissions? penumbraControlPermissions = null;
+
+        if (Service.GlamourerIPC_Caller.isGlamourerAvailable && currentGlamourerPermissions!.canControlGlamourer)
+            glamourerControlPermissions = currentGlamourerPermissions;
+
+        if (Service.PenumbraIPC_Caller.isPenumbraAvailable && currentPenumbraPermissions!.CanControlPenumbra)
+            penumbraControlPermissions = currentPenumbraPermissions;
+
+        return new PermissionsBuilder(glamourerControlPermissions, penumbraControlPermissions, permissionsList.enabled);
     }
 }

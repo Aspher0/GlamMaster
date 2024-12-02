@@ -3,6 +3,7 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.IoC;
 using Dalamud.Plugin.Services;
+using GlamMaster.IPC.Glamourer;
 using GlamMaster.IPC.Penumbra;
 using GlamMaster.Structs;
 using Lumina.Excel.Sheets;
@@ -15,6 +16,7 @@ public class Service
     public static Configuration? Configuration { get; set; }
     public static Player? ConnectedPlayer { get; set; }
     public static PenumbraIPC_Caller PenumbraIPC_Caller = new();
+    public static GlamourerIPC_Caller GlamourerIPC_Caller = new();
 
     public static void Dispose()
     {
