@@ -63,7 +63,7 @@ public static class GlamLogger
         Service.ChatGui.Print(chat);
     }
 
-    public static void PrintdError(string message, bool printPluginName = true)
+    public static void PrintError(string message, bool printPluginName = true)
     {
         Service.ChatGui.Print((printPluginName ? "[GLAMOURMASTER] - " : "") + "ERROR - " + message);
     }

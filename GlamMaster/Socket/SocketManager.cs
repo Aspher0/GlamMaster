@@ -121,11 +121,11 @@ public class SocketManager
         }
     }
 
-    public static void AbortSocketConnection(SocketIOClient.SocketIO? client)
+    public static async Task AbortSocketConnection(SocketIOClient.SocketIO? client)
     {
         GlamLogger.Information("Aborting the connection to the server.");
         CancellationTokenSource?.Cancel();
-        _ = DisposeSocket(client, true, true);
+        await DisposeSocket(client, true, true);
     }
 
     public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool resetVariables, bool printMessages = false)

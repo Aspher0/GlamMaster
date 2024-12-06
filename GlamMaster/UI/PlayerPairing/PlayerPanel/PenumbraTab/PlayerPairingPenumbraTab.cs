@@ -35,10 +35,19 @@ public class PlayerPairingPenumbraTab
 
             bool canViewFullModPaths = PenumbraPermissions.CanViewFullModPaths;
 
-            if (ImGui.Checkbox("Allow them to view your mod folders", ref canViewFullModPaths))
+            if (ImGui.Checkbox("Allow them to view the folders associated to allowed mods", ref canViewFullModPaths))
             {
                 PenumbraPermissions.CanViewFullModPaths = canViewFullModPaths;
                 Service.Configuration!.Save();
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text($"This will allow {SelectedPlayer.pairedPlayer.playerName}@{SelectedPlayer.pairedPlayer.homeWorld} to view the folders associated to the mods you allow them to see.");
+                ImGui.Text($"If unchecked, they will see your allowed mods as an unorganized list with no folders.");
+                ImGui.Text($"If checked, ONLY the folders associated to the allowed mods will show to them.");
+                ImGui.EndTooltip();
             }
 
             // Allow Mods install

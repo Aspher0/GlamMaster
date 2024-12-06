@@ -11,7 +11,7 @@ public class PenumbraMod
     public bool IsFullPathDefault;
     public bool IsSortOrderNameDefault;
     public Dictionary<string, object?> OverallChangedItems;
-    public IReadOnlyDictionary<string, (string[], GroupType)> AvailableModSettings;
+    public IReadOnlyDictionary<string, (string[], GroupType)>? AvailableModSettings;
     public CurrentModSettings CurrentModSettings;
 
     public PenumbraMod(
@@ -21,7 +21,7 @@ public class PenumbraMod
             bool isFullPathDefault,
             bool isSortOrderNameDefault,
             Dictionary<string, object?> overallChangedItems,
-            IReadOnlyDictionary<string, (string[], GroupType)> availableModSettings,
+            IReadOnlyDictionary<string, (string[], GroupType)>? availableModSettings,
             CurrentModSettings currentModSettings
         )
     {

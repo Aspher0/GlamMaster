@@ -1,13 +1,19 @@
 using Dalamud.Interface.Colors;
+using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Socket;
 using ImGuiNET;
+using System;
 using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GlamMaster.UI.Settings;
 
 public class ServerListGeneralTab
 {
+    private static readonly AsyncTaskExecutionHelper TaskManager = new();
+
     public static void DrawServerGeneralTab()
     {
         if (ImGui.BeginChild("Settings_UI##ServerListTab##ServerPanel##GeneralTab", new Vector2(0.0f, -ImGui.GetFrameHeightWithSpacing())))
@@ -67,48 +73,54 @@ public class ServerListGeneralTab
 
                     ImGui.Spacing();
 
-                    if (isProcessingServer || SocketManager.CurrentProcessingSocketServer == null)
+                    if (isProcessingServer && SocketManager.IsConnecting)
                     {
-                        if (isProcessingServer && SocketManager.IsConnecting)
+                        if (ImGui.Button("Abort Connection"))
                         {
-                            if (ImGui.Button("Abort Connection"))
+                            _ = SocketManager.AbortSocketConnection(SocketManager.GetClient);
+                        }
+                    }
+                    else if (isProcessingServer && SocketManager.IsSocketConnected)
+                    {
+                        if (ImGui.Button("Disconnect from Server"))
+                        {
+                            _ = SocketManager.DisconnectSocket(SocketManager.GetClient, true);
+                        }
+                    }
+                    else
+                    {
+                        if (Service.ClientState.IsLoggedIn)
+                        {
+                            if (ImGui.Button(SocketManager.IsConnecting ? "Abort other Server connection" : "Connect to the Server"))
                             {
-                                SocketManager.AbortSocketConnection(SocketManager.GetClient);
+                                if (SocketManager.IsConnecting)
+                                {
+                                    _ = SocketManager.AbortSocketConnection(SocketManager.GetClient);
+                                }
+                                else if (SocketManager.IsSocketConnected)
+                                {
+                                    TaskManager.StartTask(
+                                        SocketManager.DisconnectSocket(SocketManager.GetClient, true),
+                                        () => _ = SocketManager.InitializeSocket(ServerSelector.SelectedServer)
+                                    );
+                                }
+                                else
+                                {
+                                    _ = SocketManager.InitializeSocket(ServerSelector.SelectedServer);
+                                }
                             }
                         }
                         else
                         {
-                            if (isProcessingServer && SocketManager.IsSocketConnected)
-                            {
-                                if (ImGui.Button("Disconnect from Server"))
-                                {
-                                    _ = SocketManager.DisconnectSocket(SocketManager.GetClient, true);
-                                }
-                            }
-                            else
-                            {
-                                bool isLoggedIn = Service.ClientState.IsLoggedIn;
+                            ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
+                            ImGui.Button("Connect to the Server");
+                            ImGui.PopStyleVar();
 
-                                if (isLoggedIn)
-                                {
-                                    if (ImGui.Button("Connect to the Server") && isLoggedIn)
-                                    {
-                                        _ = SocketManager.InitializeSocket(ServerSelector.SelectedServer);
-                                    }
-                                }
-                                else
-                                {
-                                    ImGui.PushStyleVar(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f);
-                                    ImGui.Button("Connect to the Server");
-                                    ImGui.PopStyleVar();
-
-                                    if (ImGui.IsItemHovered())
-                                    {
-                                        ImGui.BeginTooltip();
-                                        ImGui.Text("Please connect to a character to connect to the server.");
-                                        ImGui.EndTooltip();
-                                    }
-                                }
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.Text("Please connect to a character to connect to the server.");
+                                ImGui.EndTooltip();
                             }
                         }
                     }

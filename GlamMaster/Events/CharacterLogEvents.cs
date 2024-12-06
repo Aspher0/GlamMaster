@@ -26,7 +26,7 @@ public class CharacterLogEvents
 
         if (SocketManager.IsConnecting)
         {
-            SocketManager.AbortSocketConnection(SocketManager.GetClient);
+            _ = SocketManager.AbortSocketConnection(SocketManager.GetClient);
         }
         else if (SocketManager.IsSocketConnected)
         {

@@ -20,7 +20,9 @@ public sealed class Plugin : IDalamudPlugin
 
     private readonly List<Tuple<string, string>> commandNames = new()
     {
-        new Tuple<string, string>("/gmaster", "Opens Glamour Master.")
+        new Tuple<string, string>("/glamourmaster", "Opens Glamour Master."),
+        new Tuple<string, string>("/glammaster", "Alias of /glamourmaster."),
+        new Tuple<string, string>("/gmaster", "Alias of /glamourmaster."),
     };
 
     public readonly WindowSystem WindowSystem = new("GlamMaster");
@@ -29,9 +31,11 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin()
     {
         PluginInterface.Create<Service>(Array.Empty<object>());
-        Service.InitializeService();
-
+        
         ECommonsMain.Init(PluginInterface, this);
+        SetupAPIs();
+
+        Service.InitializeService();
 
         MainWindow = new UIBuilder(this);
         WindowSystem.AddWindow(MainWindow);
@@ -40,8 +44,6 @@ public sealed class Plugin : IDalamudPlugin
         SetupCommands();
         EventsManager.RegisterAllEvents();
 
-        Service.GetConnectedPlayer();
-
         if (Service.Configuration!.AutoConnectSocketServer != null && Service.ClientState.IsLoggedIn)
         {
             _ = SocketManager.InitializeSocket(Service.Configuration.AutoConnectSocketServer);
@@ -49,7 +51,7 @@ public sealed class Plugin : IDalamudPlugin
 
         if (Service.Configuration.OpenPluginOnLoad) MainWindow.IsOpen = true;
 
-        SetupAPIs();
+
     }
 
     private void SetupAPIs()
@@ -81,10 +83,19 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnCommand(string command, string args)
     {
-        if (command == "/gmaster")
+        string[] splitArgs = args.Split(' ');
+
+        if (splitArgs.Length > 0)
         {
-            ToggleMainUI();
+            // For a possible future, not yet planned
+            if (splitArgs[0] == "config" || splitArgs[0] == "settings")
+            {
+                OpenSettings();
+                return;
+            }
         }
+
+        ToggleMainUI();
     }
 
     public void ToggleMainUI() => MainWindow.Toggle();

@@ -1,3 +1,4 @@
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using Penumbra.Api.Enums;
@@ -9,6 +10,10 @@ namespace GlamMaster.Events;
 public class PenumbraEvents
 {
     public static EventSubscriber<ModSettingChange, Guid, string, bool>? _modSettingChangedSubscriber;
+    public static EventSubscriber<string> _modDeletedSubscriber;
+    public static EventSubscriber<string> _modAddedSubscriber;
+    public static EventSubscriber<string, string> _modMovedSubscriber;
+
     public static EventSubscriber? _penumbraInitialized;
     public static EventSubscriber? _penumbraDisposed;
 
@@ -34,6 +39,22 @@ public class PenumbraEvents
 
     public static void OnModSettingChanged(ModSettingChange change, Guid modId, string settingName, bool value)
     {
-        GlamLogger.Debug($"Mod Setting Changed, values: ModSettingChange: {change.ToString()}, ModId: {modId}, Setting: {settingName}, Value: {value}");
+        if (change != ModSettingChange.TemporaryMod)
+            GlamLogger.Debug($"Mod Setting Changed, values: ModSettingChange: {change.ToString()}, ModId: {modId}, Setting: {settingName}, Value: {value}");
+    }
+    
+    public static void OnModDeleted(string deletedModBaseDirectoryName)
+    {
+        GlamLogger.Debug($"Mod deleted at {deletedModBaseDirectoryName}");
+    }
+    
+    public static void OnModAdded(string newModBaseDirectoryName)
+    {
+        GlamLogger.Debug($"Mod added at {newModBaseDirectoryName}");
+    }
+
+    public static void OnModMoved(string previousModBaseDirectoryName, string newModBaseDirectoryName)
+    {
+        GlamLogger.Debug($"Mod moved from {previousModBaseDirectoryName} to {newModBaseDirectoryName}");
     }
 }

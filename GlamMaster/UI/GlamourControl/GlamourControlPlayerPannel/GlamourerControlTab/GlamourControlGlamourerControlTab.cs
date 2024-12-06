@@ -12,7 +12,7 @@ public class GlamourControlGlamourerControlTab
 
         var GlamourerPermissions = SelectedPlayer.theirPermissionsListToUser!.glamourerControlPermissions;
 
-        if (!GlamourerPermissions.canControlGlamourer)
+        if (GlamourerPermissions == null || !GlamourerPermissions.canControlGlamourer)
         {
             ImGui.TextColored(ImGuiColors.DalamudRed, $"You do not have the permission to use the Glamourer Control Module.");
         }

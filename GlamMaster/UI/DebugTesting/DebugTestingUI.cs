@@ -2,6 +2,7 @@ using Dalamud.Interface.Colors;
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using ImGuiNET;
+using System;
 using System.Linq;
 using System.Numerics;
 
@@ -54,7 +55,12 @@ public class DebugTestingUI
                         {
                             var collection = Service.PenumbraIPC_Caller.GetCollectionForObject((int)Service.ClientState.LocalPlayer.DataId);
 
-                            GlamLogger.Debug($"Valid: {collection.ObjectValid}, IndividualSet: {collection.IndividualSet}, Collection: GUID {collection.EffectiveCollection.Id} Name {collection.EffectiveCollection.Name}");
+                            GlamLogger.Debug($"Valid: {collection.ObjectValid}, IndividualSet: {collection.IndividualSet}, Collection: GUID {collection.EffectiveCollection.Id} Name {collection.EffectiveCollection.Name}, NO COLLECTION USED: {collection.EffectiveCollection.Id == Guid.Empty}");
+                        }
+
+                        if (ImGui.Button("Try initialize penumbra mods"))
+                        {
+                            Service.InitializePenumbraModList();
                         }
                     }
                 }

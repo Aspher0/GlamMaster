@@ -24,8 +24,6 @@ public class UIBuilder : Window, IDisposable
         };
     }
 
-    public void Dispose() { }
-
     public override void Draw()
     {
         if (ImGui.BeginTabBar("MainWindowTabs"))
@@ -52,6 +50,7 @@ public class UIBuilder : Window, IDisposable
 
             if (ImGui.BeginTabItem("Player Pairing"))
             {
+
                 PlayerPairingUI.DrawPlayerPairingUI();
                 ImGui.EndTabItem();
             }
@@ -79,4 +78,6 @@ public class UIBuilder : Window, IDisposable
             ImGui.EndTabBar();
         }
     }
+
+    public void Dispose() { }
 }

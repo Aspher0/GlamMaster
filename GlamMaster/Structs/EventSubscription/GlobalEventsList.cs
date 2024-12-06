@@ -40,7 +40,19 @@ internal class GlobalEventsList
         new GlobalEvent(
             () => PenumbraEvents._modSettingChangedSubscriber = ModSettingChanged.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModSettingChanged),
             () => PenumbraEvents._modSettingChangedSubscriber?.Dispose()
-        )
+        ),
+        new GlobalEvent(
+            () => PenumbraEvents._modDeletedSubscriber = ModDeleted.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModDeleted),
+            () => PenumbraEvents._modDeletedSubscriber?.Dispose()
+        ),
+        new GlobalEvent(
+            () => PenumbraEvents._modAddedSubscriber = ModAdded.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModAdded),
+            () => PenumbraEvents._modAddedSubscriber?.Dispose()
+        ),
+        new GlobalEvent(
+            () => PenumbraEvents._modMovedSubscriber = ModMoved.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModMoved),
+            () => PenumbraEvents._modMovedSubscriber?.Dispose()
+        ),
     };
 }
 
