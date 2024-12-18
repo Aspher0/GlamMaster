@@ -1,5 +1,4 @@
 using Dalamud.Configuration;
-using GlamMaster.Services;
 using GlamMaster.Structs;
 using GlamMaster.Structs.WhitelistedPlayers;
 using System;

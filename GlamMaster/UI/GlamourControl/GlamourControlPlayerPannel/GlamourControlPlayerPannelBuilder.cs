@@ -25,7 +25,8 @@ public class GlamourControlPlayerPannelBuilder
                 {
                     ImGui.TextColored(ImGuiColors.DalamudOrange, $"The permissions for {GlamourControlPlayerSelector.SelectedPlayer.pairedPlayer.playerName}@{GlamourControlPlayerSelector.SelectedPlayer.pairedPlayer.homeWorld} have not been retrieved yet.");
                     ImGui.TextColored(ImGuiColors.DalamudOrange, $"Please, request their permissions to continue.");
-                } else
+                }
+                else
                 {
                     if (ImGui.BeginTabBar("PlayerPanel_Tabs"))
                     {

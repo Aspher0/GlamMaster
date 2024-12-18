@@ -5,7 +5,6 @@ using Dalamud.Plugin;
 using ECommons;
 using GlamMaster.Events;
 using GlamMaster.Helpers;
-using GlamMaster.IPC.Penumbra;
 using GlamMaster.Services;
 using GlamMaster.Socket;
 using GlamMaster.UI;
@@ -31,7 +30,7 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin()
     {
         PluginInterface.Create<Service>(Array.Empty<object>());
-        
+
         ECommonsMain.Init(PluginInterface, this);
         SetupAPIs();
 

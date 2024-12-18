@@ -70,7 +70,7 @@ public class PenumbraIPC_Caller
     public PenumbraApiEc ReloadMod(string modDirectory, string modName = "") => penumbraReloadMod.Invoke(modDirectory, modName);
 
     public IReadOnlyDictionary<string, (string[], GroupType)>? GetAvailableModSettings(string modDirectory, string modName = "") => penumbraGetAvailableModSettings.Invoke(modDirectory, modName);
-    
+
     public (int StatusCode, CurrentModSettings? CurrentModSettings) GetCurrentModSettings(Guid collectionId, string modDirectory, string modName = "", bool ignoreInheritance = false)
     {
         var currentModSettings = penumbraGetCurrentModSettings.Invoke(collectionId, modDirectory, modName, ignoreInheritance);

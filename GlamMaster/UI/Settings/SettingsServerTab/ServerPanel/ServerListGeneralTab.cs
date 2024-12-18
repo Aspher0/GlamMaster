@@ -3,10 +3,7 @@ using GlamMaster.Helpers;
 using GlamMaster.Services;
 using GlamMaster.Socket;
 using ImGuiNET;
-using System;
 using System.Numerics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GlamMaster.UI.Settings;
 

@@ -60,7 +60,8 @@ public static class ReceivePermissionsPayloadFromPlayerHandler
                 if (payload.Permissions.penumbraControlPermissions == null)
                 {
                     GlamLogger.Debug($"Penumbra control status: Disallowed or Penumbra Unavailable on their end.");
-                } else
+                }
+                else
                 {
                     GlamLogger.Debug($"Penumbra control status: {(payload.Permissions.penumbraControlPermissions.CanControlPenumbra ? "Allowed" : "Disallowed")}.");
 

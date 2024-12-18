@@ -1,4 +1,3 @@
-using FFXIVClientStructs.FFXIV.Common.Lua;
 using GlamMaster.Helpers;
 using GlamMaster.Services;
 using Penumbra.Api.Enums;
@@ -42,12 +41,12 @@ public class PenumbraEvents
         if (change != ModSettingChange.TemporaryMod)
             GlamLogger.Debug($"Mod Setting Changed, values: ModSettingChange: {change.ToString()}, ModId: {modId}, Setting: {settingName}, Value: {value}");
     }
-    
+
     public static void OnModDeleted(string deletedModBaseDirectoryName)
     {
         GlamLogger.Debug($"Mod deleted at {deletedModBaseDirectoryName}");
     }
-    
+
     public static void OnModAdded(string newModBaseDirectoryName)
     {
         GlamLogger.Debug($"Mod added at {newModBaseDirectoryName}");
