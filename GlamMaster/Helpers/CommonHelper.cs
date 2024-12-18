@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace GlamMaster.Helpers;
 
-public static class GlobalHelper
+public static class CommonHelper
 {
     private static readonly char[] AllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_".ToCharArray();
     private static readonly Regex UrlRegex = new Regex(@"^(http|https|ws|wss)://([\w\-\.]+)(:\d+)?(/.*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -72,11 +72,6 @@ public static class GlobalHelper
         return true;
     }
 
-    public static PairedPlayer? TryGetExistingPairedPlayerInConfig(string playerName, string playerHomeworld)
-    {
-        return Service.Configuration!.PairedPlayers.Find(player => player.pairedPlayer.playerName == playerName && player.pairedPlayer.homeWorld == playerHomeworld);
-    }
-
     public static void OpenUrl(string url)
     {
         try
@@ -96,5 +91,10 @@ public static class GlobalHelper
     public static string ToDebugString<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
     {
         return "{" + string.Join(",", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
+    }
+
+    public static PairedPlayer? TryGetExistingPairedPlayerInConfig(string playerName, string playerHomeworld)
+    {
+        return Service.Configuration!.PairedPlayers.Find(player => player.pairedPlayer.playerName == playerName && player.pairedPlayer.homeWorld == playerHomeworld);
     }
 }

@@ -49,6 +49,18 @@ public class DebugTestingUI
                         GlamLogger.Debug($"Breaking {ApiVersion.Breaking}, Features {ApiVersion.Features}");
                     }
 
+                    if (ImGui.Button("Get Penumbra Mod install path"))
+                    {
+                        var PenumbraModsPath = Service.PenumbraIPC_Caller.GetModDirectory();
+                        GlamLogger.Debug($"Penumbra Mods Path: {PenumbraModsPath}");
+                    }
+
+                    if (ImGui.Button("Get Penumbra Configuration"))
+                    {
+                        var PenumbraConfig = Service.PenumbraIPC_Caller.GetConfiguration();
+                        GlamLogger.Debug($"Penumbra Configuration: {PenumbraConfig}");
+                    }
+
                     if (Service.ClientState!.LocalPlayer != null)
                     {
                         if (ImGui.Button("Get currently used collection on character"))
@@ -61,6 +73,40 @@ public class DebugTestingUI
                         if (ImGui.Button("Try initialize penumbra mods"))
                         {
                             Service.InitializePenumbraModList();
+                        }
+                    }
+                }
+                else
+                {
+                    ImGui.TextColored(ImGuiColors.DalamudRed, "Penumbra unavailable, please enable or install it.");
+                }
+
+                ImGui.EndChild();
+            }
+
+            ImGui.TextColored(ImGuiColors.DalamudViolet, "Mods");
+
+            if (ImGui.BeginChild("Debug_Testing_UI##MainUI##ModsSection", new Vector2(0, Service.PenumbraIPC_Caller.isPenumbraAvailable ? -1 : 60f), true))
+            {
+                if (Service.PenumbraIPC_Caller.isPenumbraAvailable)
+                {
+                    foreach (var penumbraMod in Service.PenumbraModList)
+                    {
+                        if (ImGui.Button(penumbraMod.ModName))
+                        {
+                            GlamLogger.Debug($"Enabled: {penumbraMod.CurrentModSettings.Enabled}, Priority: {penumbraMod.CurrentModSettings.Priority}, Inherited: {penumbraMod.CurrentModSettings.Inherited}");
+
+                            GlamLogger.Debug($"{penumbraMod.CurrentModSettings.CurrentOptions.Count}");
+
+                            foreach (var option in penumbraMod.CurrentModSettings.CurrentOptions)
+                            {
+                                GlamLogger.Debug($"================ Key: {option.Key} ================");
+
+                                foreach (var value in option.Value)
+                                {
+                                    GlamLogger.Debug($"Value: {value}");
+                                }
+                            }
                         }
                     }
                 }

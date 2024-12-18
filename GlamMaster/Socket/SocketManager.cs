@@ -60,7 +60,7 @@ public class SocketManager
 
         string serverURL = socketServer.serverURL;
 
-        if (!GlobalHelper.IsValidServerUrl(serverURL))
+        if (!CommonHelper.IsValidServerUrl(serverURL))
         {
             GlamLogger.Information("Invalid Server URL.");
             GlamLogger.PrintErrorChannel("The server you have selected does not have a valid URL.");

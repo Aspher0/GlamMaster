@@ -51,7 +51,7 @@ public class PairedPlayer
         this.requestTheirPermissionsAutomatically = requestTheirPermissionsAutomatically;
     }
 
-    public static string GenerateEncryptionKey() => "GLAM_MASTER_ENC_KEY-" + GlobalHelper.GenerateRandomString(50, true);
+    public static string GenerateEncryptionKey() => "GLAM_MASTER_ENC_KEY-" + CommonHelper.GenerateRandomString(50, true);
 
     public void GenerateNewEncryptionKey()
     {

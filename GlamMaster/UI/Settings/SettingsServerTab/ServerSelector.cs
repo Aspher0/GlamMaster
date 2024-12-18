@@ -55,9 +55,9 @@ public class ServerSelector
                 string nameWithWarnings = (isProcessingServer ? $"[{state}] " : "") + name;
                 string id = SocketServer.uniqueID;
 
-                bool flag_id_match = GlobalHelper.RegExpMatch(id, CurrentServerSelectorSearch);
-                bool flag_name_match = GlobalHelper.RegExpMatch(nameWithWarnings, CurrentServerSelectorSearch);
-                bool flag_url_match = GlobalHelper.RegExpMatch(SocketServer.serverURL, CurrentServerSelectorSearch);
+                bool flag_id_match = CommonHelper.RegExpMatch(id, CurrentServerSelectorSearch);
+                bool flag_name_match = CommonHelper.RegExpMatch(nameWithWarnings, CurrentServerSelectorSearch);
+                bool flag_url_match = CommonHelper.RegExpMatch(SocketServer.serverURL, CurrentServerSelectorSearch);
 
                 if (flag_name_match || flag_url_match || (SocketServer.name == string.Empty && flag_id_match))
                 {

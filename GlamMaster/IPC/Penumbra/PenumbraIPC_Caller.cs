@@ -71,16 +71,19 @@ public class PenumbraIPC_Caller
 
     public IReadOnlyDictionary<string, (string[], GroupType)>? GetAvailableModSettings(string modDirectory, string modName = "") => penumbraGetAvailableModSettings.Invoke(modDirectory, modName);
     
-    public CurrentModSettings GetCurrentModSettings(Guid collectionId, string modDirectory, string modName = "", bool ignoreInheritance = false)
+    public (int StatusCode, CurrentModSettings? CurrentModSettings) GetCurrentModSettings(Guid collectionId, string modDirectory, string modName = "", bool ignoreInheritance = false)
     {
         var currentModSettings = penumbraGetCurrentModSettings.Invoke(collectionId, modDirectory, modName, ignoreInheritance);
 
-        if (currentModSettings.Item1 == PenumbraApiEc.ModMissing || currentModSettings.Item1 == PenumbraApiEc.CollectionMissing || !currentModSettings.Item2.HasValue)
-            throw new Exception($"Error during PenumbraIPC.GetCurrentModSettings, collection: {collectionId}, mod directory: {modDirectory}, mod name: {modName}. Status code: {currentModSettings.Item1}, Has value: {currentModSettings.Item2.HasValue}.");
+        if (currentModSettings.Item1 == PenumbraApiEc.ModMissing || currentModSettings.Item1 == PenumbraApiEc.CollectionMissing)
+            return (1, null);
+
+        if (!currentModSettings.Item2.HasValue)
+            return (2, null);
 
         var modSettings = currentModSettings.Item2.Value;
 
-        return new CurrentModSettings(modSettings.Item1, modSettings.Item2, modSettings.Item3, modSettings.Item4);
+        return (0, new CurrentModSettings(modSettings.Item1, modSettings.Item2, modSettings.Item3, modSettings.Item4));
     }
 
     public PenumbraApiEc TrySetModSetting(Guid collectionId, string modDirectory, string optionGroupName, string optionName, string modName = "") => penumbraTrySetModSetting.Invoke(collectionId, modDirectory, optionGroupName, optionName, modName);
@@ -110,6 +113,16 @@ public class PenumbraIPC_Caller
     public (PenumbraApiEc, (Guid Id, string Name)? OldCollection) SetCollectionForObject(int gameObjectIdx, Guid? collectionId, bool allowCreateNew = true, bool allowDelete = true) => penumbraSetCollectionForObject.Invoke(gameObjectIdx, collectionId, allowCreateNew, allowDelete);
 
     public Dictionary<string, object?> GetChangedItemsForCollection(Guid collectionId) => penumbraGetChangedItemsForCollection.Invoke(collectionId);
+
+    #endregion
+
+    #region PluginState.cs
+
+    private readonly GetModDirectory penumbraGetModDirectory = new(Plugin.PluginInterface);
+    private readonly GetConfiguration penumbraGetConfiguration = new(Plugin.PluginInterface);
+
+    public string GetModDirectory() => penumbraGetModDirectory.Invoke();
+    public string GetConfiguration() => penumbraGetConfiguration.Invoke();
 
     #endregion
 }

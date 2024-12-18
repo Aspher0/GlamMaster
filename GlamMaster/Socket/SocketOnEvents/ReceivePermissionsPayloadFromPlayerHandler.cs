@@ -16,7 +16,7 @@ public static class ReceivePermissionsPayloadFromPlayerHandler
         {
             var data = response.GetValue<FullPayloadJSON>();
 
-            PairedPlayer? pairedPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(data.FromPlayer.playerName, data.FromPlayer.homeWorld);
+            PairedPlayer? pairedPlayer = CommonHelper.TryGetExistingPairedPlayerInConfig(data.FromPlayer.playerName, data.FromPlayer.homeWorld);
 
             if (pairedPlayer == null)
             {

@@ -36,10 +36,8 @@ public class PlayerActionBar
 
                         if (targetedPlayerHomeWorld != null)
                         {
-                            // alreadyFoundPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Name.RawString);
-                            alreadyFoundPlayer = GlobalHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Value.Name.ToString());
+                            alreadyFoundPlayer = CommonHelper.TryGetExistingPairedPlayerInConfig(playerCharacter.Name.TextValue, targetedPlayerHomeWorld.Value.Name.ToString());
 
-                            // text = (alreadyFoundPlayer != null ? "Edit " : "Add ") + $"{playerCharacter.Name.TextValue}@{targetedPlayerHomeWorld.Name.RawString}";
                             text = (alreadyFoundPlayer != null ? "Edit " : "Add ") + $"{playerCharacter.Name.TextValue}@{targetedPlayerHomeWorld.Value.Name.ToString()}";
                         }
                         else

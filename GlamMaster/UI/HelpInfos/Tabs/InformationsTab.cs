@@ -31,7 +31,7 @@ public class InformationsTab
 
         if (ImGui.Button("Report a bug", new Vector2(availableWidth, 0)))
         {
-            GlobalHelper.OpenUrl("https://github.com/Aspher0/GlamMaster/issues");
+            CommonHelper.OpenUrl("https://github.com/Aspher0/GlamMaster/issues");
         }
 
         ImGui.PopStyleColor(3);
@@ -42,7 +42,7 @@ public class InformationsTab
 
         if (ImGui.Button("Support me ♥", new Vector2(availableWidth, 0)))
         {
-            GlobalHelper.OpenUrl("https://github.com/Aspher0/GlamMaster");
+            CommonHelper.OpenUrl("https://github.com/Aspher0/GlamMaster");
         }
 
         if (ImGui.IsItemHovered())

@@ -46,7 +46,7 @@ public class GlamourControlPlayerSelector
                 string displayText = (emptyPairedPlayerEncKey ? "[Warning] " : "") + displayName;
                 string id = player.uniqueID;
 
-                bool nameMatch = GlobalHelper.RegExpMatch(displayText, CurrentPlayerSelectorSearch);
+                bool nameMatch = CommonHelper.RegExpMatch(displayText, CurrentPlayerSelectorSearch);
 
                 if (nameMatch)
                 {
