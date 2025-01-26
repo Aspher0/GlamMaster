@@ -10,23 +10,59 @@ using System.Threading.Tasks;
 
 namespace GlamMaster.Socket;
 
-public class SocketManager
+public static class SocketManager
 {
+    /// <summary>
+    /// The current socket server being processed.
+    /// It means it is either connecting or connected to this server.
+    /// </summary>
     public static SocketServer? CurrentProcessingSocketServer = null;
 
+    /// <summary>
+    /// Indicates whether the socket is connected.
+    /// </summary>
     public static bool IsSocketConnected;
 
+    /// <summary>
+    /// Event triggered when the connection state changes.
+    /// </summary>
+    public static event EventHandler<bool>? IsConnectingChanged;
+
     private static bool Connecting = false;
-    public static bool IsConnecting => Connecting;
+
+    /// <summary>
+    /// Indicates whether the socket is in the process of connecting.
+    /// </summary>
+    public static bool IsConnecting
+    {
+        get => Connecting;
+        private set
+        {
+            if (Connecting != value)
+            {
+                Connecting = value;
+                IsConnectingChanged?.Invoke(null, Connecting);
+            }
+        }
+    }
 
     private static SocketIOClient.SocketIO? Client;
+
+    /// <summary>
+    /// Gets the current socket client.
+    /// </summary>
     public static SocketIOClient.SocketIO? GetClient => Client;
 
     private static SemaphoreSlim ConnectionSemaphore = new SemaphoreSlim(1);
 
     private static CancellationTokenSource? CancellationTokenSource;
+
     public static CancellationTokenSource? GetCancellationTokenSource => CancellationTokenSource;
 
+    /// <summary>
+    /// Initializes the socket connection to the specified server.
+    /// </summary>
+    /// <param name="socketServer">The socket server to connect to.</param>
     public static async Task InitializeSocket(SocketServer? socketServer)
     {
         if (!Service.ClientState.IsLoggedIn)
@@ -49,7 +85,7 @@ public class SocketManager
                 GlamLogger.Print("You are already connected to a server.");
             }
 
-            if (Connecting)
+            if (IsConnecting)
             {
                 GlamLogger.Information("Client already trying to connect to a server.");
                 GlamLogger.Print("The socket is already trying to connect to a server.");
@@ -68,7 +104,7 @@ public class SocketManager
         }
 
         CurrentProcessingSocketServer = socketServer;
-        Connecting = true;
+        IsConnecting = true;
 
         CancellationTokenSource?.Cancel();
         CancellationTokenSource = new CancellationTokenSource();
@@ -116,11 +152,15 @@ public class SocketManager
         }
         finally
         {
-            Connecting = false;
+            IsConnecting = false;
             ConnectionSemaphore.Release();
         }
     }
 
+    /// <summary>
+    /// Aborts the socket connection.
+    /// </summary>
+    /// <param name="client">The socket client to abort the connection for.</param>
     public static async Task AbortSocketConnection(SocketIOClient.SocketIO? client)
     {
         GlamLogger.Information("Aborting the connection to the server.");
@@ -128,6 +168,12 @@ public class SocketManager
         await DisposeSocket(client, true, true);
     }
 
+    /// <summary>
+    /// Disposes the socket connection.
+    /// </summary>
+    /// <param name="client">The socket client to dispose.</param>
+    /// <param name="resetVariables">Indicates whether to reset the SocketManager class variables.</param>
+    /// <param name="printMessages">Indicates whether to print messages.</param>
     public static async Task DisposeSocket(SocketIOClient.SocketIO? client, bool resetVariables, bool printMessages = false)
     {
         if (resetVariables)
@@ -151,6 +197,11 @@ public class SocketManager
         client = null;
     }
 
+    /// <summary>
+    /// Disconnects the socket connection.
+    /// </summary>
+    /// <param name="client">The socket client to disconnect.</param>
+    /// <param name="printMessages">Indicates whether to print messages.</param>
     public static async Task DisconnectSocket(SocketIOClient.SocketIO? client, bool printMessages = false)
     {
         if (client == null || !client.Connected)
@@ -179,6 +230,12 @@ public class SocketManager
         CurrentProcessingSocketServer = null;
     }
 
+    /// <summary>
+    /// Checks if the client is valid and connected.
+    /// </summary>
+    /// <param name="client">The socket client to check.</param>
+    /// <param name="printMessage">Indicates whether to print messages.</param>
+    /// <returns>True if the client is valid and connected, otherwise false.</returns>
     public static bool IsClientValidAndConnected(SocketIOClient.SocketIO client, bool printMessage = false)
     {
         if (client == null || !client.Connected)

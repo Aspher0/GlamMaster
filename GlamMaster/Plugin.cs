@@ -13,10 +13,19 @@ using System.Collections.Generic;
 
 namespace GlamMaster;
 
+/// <summary>
+/// The main plugin class for GlamMaster.
+/// </summary>
 public sealed class Plugin : IDalamudPlugin
 {
+    /// <summary>
+    /// Injects the plugin interface for Dalamud.
+    /// </summary>
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
 
+    /// <summary>
+    /// List of command names (aliases) and their descriptions.
+    /// </summary>
     private readonly List<Tuple<string, string>> commandNames = new()
     {
         new Tuple<string, string>("/glamourmaster", "Opens Glamour Master."),
@@ -27,6 +36,9 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("GlamMaster");
     private UIBuilder MainWindow { get; init; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Plugin"/> class.
+    /// </summary>
     public Plugin()
     {
         PluginInterface.Create<Service>(Array.Empty<object>());
@@ -49,10 +61,11 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         if (Service.Configuration.OpenPluginOnLoad) MainWindow.IsOpen = true;
-
-
     }
 
+    /// <summary>
+    /// Sets up the APIs used by the plugin.
+    /// </summary>
     private void SetupAPIs()
     {
         if (IPCHelper.IsPenumbraAPIAvailable())
@@ -62,6 +75,9 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
 
+    /// <summary>
+    /// Sets up the UI components of the plugin.
+    /// </summary>
     private void SetupUI()
     {
         PluginInterface.UiBuilder.Draw += () => WindowSystem.Draw();
@@ -69,6 +85,9 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += OpenSettings;
     }
 
+    /// <summary>
+    /// Sets up the commands for the plugin.
+    /// </summary>
     private void SetupCommands()
     {
         foreach (var CommandName in commandNames)
@@ -80,6 +99,11 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
 
+    /// <summary>
+    /// Handles the commands issued to the plugin.
+    /// </summary>
+    /// <param name="command">The command issued.</param>
+    /// <param name="args">The arguments for the command.</param>
     private void OnCommand(string command, string args)
     {
         string[] splitArgs = args.Split(' ');
@@ -97,9 +121,15 @@ public sealed class Plugin : IDalamudPlugin
         ToggleMainUI();
     }
 
+    /// <summary>
+    /// Toggles the main UI of the plugin.
+    /// </summary>
     public void ToggleMainUI() => MainWindow.Toggle();
     public void OpenSettings() => MainWindow.Toggle();
 
+    /// <summary>
+    /// Disposes the plugin and cleans up resources.
+    /// </summary>
     public async void Dispose()
     {
         WindowSystem.RemoveAllWindows();
