@@ -88,6 +88,5 @@ public class PlayerPairingPlayerPanelBuilder
             ImGui.TextColored(ImGuiColors.DalamudRed, "If the key is not specified, most of the features won't work.");
             ImGui.Spacing();
         }
-
     }
 }

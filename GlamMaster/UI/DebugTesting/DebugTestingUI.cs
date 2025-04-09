@@ -20,7 +20,7 @@ public class DebugTestingUI
 
                 if (Service.PenumbraIPC_Caller.isPenumbraAvailable)
                 {
-                    if (Service.ClientState!.LocalPlayer != null)
+                    if (Service.ConnectedPlayerObject != null)
                     {
                         if (ImGui.Button("Redraw Local Player"))
                         {
@@ -61,11 +61,11 @@ public class DebugTestingUI
                         GlamLogger.Debug($"Penumbra Configuration: {PenumbraConfig}");
                     }
 
-                    if (Service.ClientState!.LocalPlayer != null)
+                    if (Service.ConnectedPlayerObject != null)
                     {
                         if (ImGui.Button("Get currently used collection on character"))
                         {
-                            var collection = Service.PenumbraIPC_Caller.GetCollectionForObject((int)Service.ClientState.LocalPlayer.DataId);
+                            var collection = Service.PenumbraIPC_Caller.GetCollectionForObject((int)Service.ConnectedPlayerObject.DataId);
 
                             GlamLogger.Debug($"Valid: {collection.ObjectValid}, IndividualSet: {collection.IndividualSet}, Collection: GUID {collection.EffectiveCollection.Id} Name {collection.EffectiveCollection.Name}, NO COLLECTION USED: {collection.EffectiveCollection.Id == Guid.Empty}");
                         }
@@ -90,7 +90,8 @@ public class DebugTestingUI
             {
                 if (Service.PenumbraIPC_Caller.isPenumbraAvailable)
                 {
-                    foreach (var penumbraMod in Service.PenumbraModList)
+                    var sortedModList = Service.PenumbraModList.OrderBy(penumbraMod => penumbraMod.ModName).ToList();
+                    foreach (var penumbraMod in sortedModList)
                     {
                         if (ImGui.Button(penumbraMod.ModName))
                         {

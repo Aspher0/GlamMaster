@@ -75,10 +75,10 @@ public static class IPCHelper
         if (!Service.PenumbraIPC_Caller.isPenumbraAvailable)
             throw new Exception("Penumbra API is not available while retrieving all installed penumbra mods.");
 
-        if (Service.ClientState!.LocalPlayer == null)
+        if (Service.ConnectedPlayerObject == null)
             throw new Exception("The player is not logged in while retrieving all installed penumbra mods.");
 
-        var currentlyAppliedCollection = Service.PenumbraIPC_Caller.GetCollectionForObject(Service.ClientState!.LocalPlayer.ObjectIndex);
+        var currentlyAppliedCollection = Service.PenumbraIPC_Caller.GetCollectionForObject(Service.ConnectedPlayerObject.ObjectIndex);
 
         if (!currentlyAppliedCollection.ObjectValid)
             throw new Exception("Game object was not valid when retrieving currently used Penumbra collection.");
@@ -139,7 +139,7 @@ public static class IPCHelper
                     if (foundAvailableOption == null)
                         continue;
 
-                    // Sometimes, DefaultSettings bugs and becomes a huge number in the penumbra mod JSON file for some reason apparently
+                    // Sometimes, DefaultSettings bugs and becomes a huge number in the penumbra mod JSON file for some reason
                     // TODO: Optimize this to merge it with the condition below, optionType == "Single" && optionDefaultSettings == 0
                     if (!int.TryParse(optionDefaultSettingsToken.ToString(), out var optionDefaultSettings))
                     {
@@ -155,6 +155,7 @@ public static class IPCHelper
                         break;
                     }
 
+                    // If single, DefaultSettings = index in JSON list, if multi, DefaultSettings = binary representation of selected options
                     var listOfOptionsAvailable = foundAvailableOption.Value.Value.Item1;
                     var optionDefaultSettingsToBinaryString = Convert.ToString(optionDefaultSettings, 2).PadLeft(listOfOptionsAvailable.Length, '0');
 
@@ -185,7 +186,8 @@ public static class IPCHelper
 
                     defaultPenumbraModSettings[foundAvailableOption.Value.Key] = defaultOptions;
 
-                    break; // Once we find the right file, we can break and move on to the next option group
+                    // Once we find the right file, we can break and move onto the next option group
+                    break;
                 }
                 catch (Exception ex)
                 {

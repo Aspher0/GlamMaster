@@ -28,7 +28,7 @@ public class PlayerActionBar
 
                 if (target is IPlayerCharacter pc)
                 {
-                    if (pc.Address != Service.ClientState.LocalPlayer?.Address)
+                    if (pc.Address != Service.ConnectedPlayerObject?.Address)
                     {
                         isTargetingPlayer = true;
                         playerCharacter = pc;

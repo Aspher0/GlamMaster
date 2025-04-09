@@ -3,11 +3,12 @@
   <Import Project="Dalamud.Plugin.Bootstrap.targets" />
 
   <PropertyGroup>
-    <Version>0.0.2.1</Version>
+    <Version>0.0.3.1</Version>
     <Description>Let others control your fashion.</Description>
     <PackageProjectUrl>https://github.com/goatcorp/SamplePlugin</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -25,5 +26,9 @@
     <ProjectReference Include="..\Penumbra.Api\Penumbra.Api.csproj" />
     <ProjectReference Include="..\socket.io-client-csharp\src\SocketIO.Serializer.NewtonsoftJson\SocketIO.Serializer.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\socket.io-client-csharp\src\SocketIOClient\SocketIOClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="DalamudPackager" Version="12.0.0" />
   </ItemGroup>
 </Project>

@@ -33,6 +33,7 @@ public class Service
     [PluginService] public static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
     public static Configuration? Configuration { get; set; }
+    public static IPlayerCharacter? ConnectedPlayerObject { get; set; }
     public static Player? ConnectedPlayer { get; set; }
     public static PenumbraIPC_Caller PenumbraIPC_Caller = new();
     public static GlamourerIPC_Caller GlamourerIPC_Caller = new();
@@ -52,9 +53,11 @@ public class Service
         Configuration.Save();
     }
 
-    public static void GetConnectedPlayer()
+    public static async void GetConnectedPlayer()
     {
-        IPlayerCharacter? playerCharacter = ClientState!.LocalPlayer;
+        IPlayerCharacter? playerCharacter = await GetPlayerCharacterAsync();
+
+        ConnectedPlayerObject = playerCharacter;
 
         if (playerCharacter != null)
         {
@@ -71,6 +74,7 @@ public class Service
     public static void ClearConnectedPlayer()
     {
         ConnectedPlayer = null;
+        ConnectedPlayerObject = null;
     }
 
     public static void InitializePenumbraModList()
@@ -107,6 +111,8 @@ public class Service
             }
         });
     }
+
+    public async static Task<IPlayerCharacter?> GetPlayerCharacterAsync() => await Framework.RunOnFrameworkThread(() => ClientState!.LocalPlayer);
 
     public static void ClearPenumbraModList()
     {
