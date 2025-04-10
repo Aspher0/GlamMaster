@@ -1,3 +1,6 @@
+using ECommons.EzIpcManager;
+using Glamourer.Api.IpcSubscribers;
+
 namespace GlamMaster.IPC.Glamourer;
 
 public class GlamourerIPC_Caller
@@ -6,6 +9,10 @@ public class GlamourerIPC_Caller
 
     public GlamourerIPC_Caller()
     {
-        // EzIPC.Init(this, "Glamourer");
+         EzIPC.Init(this, "Glamourer");
     }
+
+    private readonly UnlockAll glamourerUnlockAll = new(Plugin.PluginInterface);
+
+    public int UnlockAll(uint key) => glamourerUnlockAll.Invoke(key);
 }

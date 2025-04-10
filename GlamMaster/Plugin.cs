@@ -73,6 +73,12 @@ public sealed class Plugin : IDalamudPlugin
             PenumbraEvents.OnPenumbraInitialized();
             Service.PenumbraIPC_Caller.isPenumbraAvailable = true;
         }
+
+        if (IPCHelper.IsGlamourerAPIAvailable())
+        {
+            GlamourerEvents.OnGlamourerInitialized();
+            Service.GlamourerIPC_Caller.isGlamourerAvailable = true;
+        }
     }
 
     /// <summary>

@@ -40,10 +40,10 @@ public class Service
     public static List<PenumbraMod> PenumbraModList = new List<PenumbraMod>();
     public static bool IsInitializingPenumbraModList { get; private set; } = false;
 
-    public static void InitializeService()
+    public static async Task InitializeService()
     {
         InitializeConfig();
-        GetConnectedPlayer();
+        await GetConnectedPlayer();
         InitializePenumbraModList();
     }
 
@@ -53,7 +53,7 @@ public class Service
         Configuration.Save();
     }
 
-    public static async void GetConnectedPlayer()
+    public static async Task GetConnectedPlayer()
     {
         IPlayerCharacter? playerCharacter = await GetPlayerCharacterAsync();
 

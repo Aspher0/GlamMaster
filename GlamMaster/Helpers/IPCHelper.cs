@@ -1,5 +1,6 @@
 using ECommons;
 using GlamMaster.Services;
+using GlamMaster.Structs;
 using GlamMaster.Structs.Penumbra;
 using Newtonsoft.Json.Linq;
 using Penumbra.Api.Enums;
@@ -12,18 +13,8 @@ namespace GlamMaster.Helpers;
 
 public static class IPCHelper
 {
-    public static bool IsPenumbraAPIAvailable()
-    {
-        try
-        {
-            var ApiVersion = Service.PenumbraIPC_Caller.ApiVersion();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    public static bool IsPenumbraAPIAvailable() => PluginInterfaceHelper.IsPluginAvailable("Penumbra", "1.3.5.0") == PluginAvailability.Available;
+    public static bool IsGlamourerAPIAvailable() => PluginInterfaceHelper.IsPluginAvailable("Glamourer", "1.3.5.0") == PluginAvailability.Available;
 
     public static PenumbraMod MakePenumbraModFromDirectoryAndName(Guid collectionId, KeyValuePair<string, string> mod)
     {

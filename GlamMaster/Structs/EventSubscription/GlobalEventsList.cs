@@ -1,6 +1,7 @@
 using GlamMaster.Events;
 using GlamMaster.Services;
-using Penumbra.Api.IpcSubscribers;
+using GlamourerIPCEvents = Glamourer.Api.IpcSubscribers;
+using PenumbraIPCEvents = Penumbra.Api.IpcSubscribers;
 using System.Collections.Generic;
 
 namespace GlamMaster.Structs;
@@ -28,30 +29,40 @@ internal class GlobalEventsList
 
         // Penumbra Initialization/Dispose Events via IPC
         new GlobalEvent(
-            () => PenumbraEvents._penumbraInitialized = Initialized.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnPenumbraInitialized),
+            () => PenumbraEvents._penumbraInitialized = PenumbraIPCEvents.Initialized.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnPenumbraInitialized),
             () => PenumbraEvents._penumbraInitialized?.Dispose()
         ),
         new GlobalEvent(
-            () => PenumbraEvents._penumbraDisposed = Disposed.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnPenumbraDisposed),
+            () => PenumbraEvents._penumbraDisposed = PenumbraIPCEvents.Disposed.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnPenumbraDisposed),
             () => PenumbraEvents._penumbraDisposed?.Dispose()
         ),
 
         // Penumbra Events via IPC once Initialized
         new GlobalEvent(
-            () => PenumbraEvents._modSettingChangedSubscriber = ModSettingChanged.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModSettingChanged),
+            () => PenumbraEvents._modSettingChangedSubscriber = PenumbraIPCEvents.ModSettingChanged.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModSettingChanged),
             () => PenumbraEvents._modSettingChangedSubscriber?.Dispose()
         ),
         new GlobalEvent(
-            () => PenumbraEvents._modDeletedSubscriber = ModDeleted.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModDeleted),
+            () => PenumbraEvents._modDeletedSubscriber = PenumbraIPCEvents.ModDeleted.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModDeleted),
             () => PenumbraEvents._modDeletedSubscriber?.Dispose()
         ),
         new GlobalEvent(
-            () => PenumbraEvents._modAddedSubscriber = ModAdded.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModAdded),
+            () => PenumbraEvents._modAddedSubscriber = PenumbraIPCEvents.ModAdded.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModAdded),
             () => PenumbraEvents._modAddedSubscriber?.Dispose()
         ),
         new GlobalEvent(
-            () => PenumbraEvents._modMovedSubscriber = ModMoved.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModMoved),
+            () => PenumbraEvents._modMovedSubscriber = PenumbraIPCEvents.ModMoved.Subscriber(Plugin.PluginInterface, PenumbraEvents.OnModMoved),
             () => PenumbraEvents._modMovedSubscriber?.Dispose()
+        ),
+
+        // Glamourer Initialization/Dispose Events via IPC
+        new GlobalEvent(
+            () => GlamourerEvents._glamourerInitialized = GlamourerIPCEvents.Initialized.Subscriber(Plugin.PluginInterface, GlamourerEvents.OnGlamourerInitialized),
+            () => GlamourerEvents._glamourerInitialized?.Dispose()
+        ),
+        new GlobalEvent(
+            () => GlamourerEvents._glamourerDisposed = GlamourerIPCEvents.Disposed.Subscriber(Plugin.PluginInterface, GlamourerEvents.OnGlamourerDisposed),
+            () => GlamourerEvents._glamourerDisposed?.Dispose()
         ),
     };
 }
